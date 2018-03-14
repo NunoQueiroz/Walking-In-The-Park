@@ -71,11 +71,6 @@ public class Server {
     }
 
 
-
-
-
-
-
     private class ClientHandler implements Runnable {
 
         private Socket connection;
@@ -99,7 +94,7 @@ public class Server {
 
                     messageReceived = messageReceived();
 
-                    String decodedMessage =  stringDecoder(messageReceived);
+                    String decodedMessage = stringDecoder(messageReceived);
 
                     broadcast(decodedMessage);
 
@@ -121,7 +116,7 @@ public class Server {
 
             for (int i = 0; i < clientHandlerList.size(); i++) {
 
-                if(clientHandlerList.get(i).equals(this)){
+                if (clientHandlerList.get(i).equals(this)) {
                     continue;
                 }
 
@@ -130,6 +125,8 @@ public class Server {
             }
 
         }
+
+
         private void send(String message) throws IOException {
 
             PrintWriter serverMessage = new PrintWriter(connection.getOutputStream(), true);
@@ -145,7 +142,6 @@ public class Server {
         }
 
         private void close() {
-
 
             try {
 
