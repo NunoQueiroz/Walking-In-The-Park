@@ -9,10 +9,10 @@ public class Grid {
     private int currentCol;
     private int currentRow;
     private Picture[][] grid;
-    private static final int CELLSIZE = 30;
-    private static final int PADDING = 10;
-    private static final int CAMERA_HEIGHT = 15;
-    private static final int CAMERA_WIDHT = 20;
+    public static final int CELLSIZE = 30;
+    public static final int PADDING = 10;
+    public static final int CAMERA_HEIGHT = 15;
+    public static final int CAMERA_WIDHT = 20;
 
 
     public Grid (int totalCol, int totalRow, int currentCol, int currentRow) {
