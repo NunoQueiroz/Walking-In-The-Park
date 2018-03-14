@@ -1,6 +1,9 @@
 package org.academiadecodigo.haltistas.halflifeminus3.Server;
 
 
+import org.academiadecodigo.haltistas.halflifeminus3.Client.Bullet;
+import org.academiadecodigo.haltistas.halflifeminus3.Client.Player;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -11,6 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
 
 public class Server {
 
@@ -25,11 +29,14 @@ public class Server {
 
     private ServerSocket serversocket;
     private List<ClientHandler> clientHandlerList;
-
+    private List<Player> playerList;
+    private List<Bullet> bulletList;
 
     public Server(int port) {
 
         try {
+            playerList = new LinkedList<>();
+            bulletList = new LinkedList<>();
             serversocket = new ServerSocket(port);
             clientHandlerList = new LinkedList<>();
         } catch (IOException e) {
@@ -41,6 +48,7 @@ public class Server {
 
 
     public void start() {
+
 
         try {
 
@@ -60,33 +68,26 @@ public class Server {
             e.printStackTrace();
         }
 
-
     }
 
 
-    private void broadcast(String message) throws IOException {
-
-        for (int i = 0; i < clientHandlerList.size(); i++) {
-
-            clientHandlerList.get(i).send(message);
-
-        }
 
 
-    }
+
 
 
     private class ClientHandler implements Runnable {
 
         private Socket connection;
+        private String messageReceived;
 
 
         private ClientHandler(Socket connection) {
 
             this.connection = connection;
+            playerList.add(new Player());
 
         }
-
 
 
         @Override
@@ -96,11 +97,11 @@ public class Server {
 
                 while (true) {
 
-                    synchronized (clientHandlerList) {
+                    messageReceived = messageReceived();
 
-                        String message = messageReceived();
-                        broadcast(message);
-                    }
+                    String decodedMessage =  stringDecoder(messageReceived);
+
+                    broadcast(decodedMessage);
 
                 }
 
@@ -116,7 +117,19 @@ public class Server {
 
         }
 
+        private void broadcast(String message) throws IOException {
 
+            for (int i = 0; i < clientHandlerList.size(); i++) {
+
+                if(clientHandlerList.get(i).equals(this)){
+                    continue;
+                }
+
+                clientHandlerList.get(i).send(message);
+
+            }
+
+        }
         private void send(String message) throws IOException {
 
             PrintWriter serverMessage = new PrintWriter(connection.getOutputStream(), true);
@@ -133,22 +146,77 @@ public class Server {
 
         private void close() {
 
-            synchronized (clientHandlerList) {
-                try {
 
-                    connection.close();
-                    clientHandlerList.remove(this);
+            try {
 
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                connection.close();
+                clientHandlerList.remove(this);
 
+            } catch (IOException e) {
+                e.printStackTrace();
             }
 
         }
 
 
+        public String getMessageReceived() {
+
+            return messageReceived;
+
+        }
+
+
+        public String stringDecoder(String messageReceive) {
+
+            String[] splitedMessage = messageReceive.split(" +");
+
+            switch (splitedMessage[0]) {
+
+                case "M":
+
+                    playerList.get(new Integer(splitedMessage[1])).setCol(new Integer(splitedMessage[2]));
+                    playerList.get(new Integer(splitedMessage[1])).setRow(new Integer(splitedMessage[3]));
+
+                    return messageReceive;
+
+
+                case "B":
+
+                    bulletList.add(new Bullet());
+                    return playerBulletColision();
+
+                default:
+
+                    System.out.println("String decoder error");
+                    break;
+
+            }
+
+            return null;
+
+        }
+
+        public String playerBulletColision() {
+
+            if (playerList.size() == 0 && bulletList.size() == 0) {
+                return "no players or bullets";
+            }
+
+            for (int i = 0; i < bulletList.size(); i++) {
+
+                for (int j = 0; j < playerList.size(); i++) {
+
+                    if (playerList.get(j).getCol() == bulletList.get(i).getX() ||
+                            (playerList.get(j).getRow() <= bulletList.get(i).getY())) {
+
+                        return "hit";
+
+                    }
+                }
+
+            }
+
+            return "no hit";
+        }
     }
-
-
 }
