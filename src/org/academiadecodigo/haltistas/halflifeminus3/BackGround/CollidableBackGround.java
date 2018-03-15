@@ -5,6 +5,15 @@ import org.academiadecodigo.simplegraphics.pictures.Picture;
 
 public class CollidableBackGround extends GameBackGround {
 
+    public void init (Picture[][] grid, int totalCol, int totalRow) {
+
+        createHouse(10,10, grid);
+        createLake(grid,25, 20, 5 );
+        createWall(totalCol, totalRow, grid);
+        createHouse(35,35, grid);
+        createLake(grid, 5, 33, 5 );
+    }
+
     public void createHouse(int col, int row, Picture[][] grid) {
 
         for (int i = col; i < col + 5; i++) {

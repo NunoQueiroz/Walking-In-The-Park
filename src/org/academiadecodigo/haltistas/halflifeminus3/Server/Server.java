@@ -1,6 +1,7 @@
 package org.academiadecodigo.haltistas.halflifeminus3.Server;
 
 
+import org.academiadecodigo.haltistas.halflifeminus3.BackGround.Grid;
 import org.academiadecodigo.haltistas.halflifeminus3.Client.Bullet;
 import org.academiadecodigo.haltistas.halflifeminus3.Client.Player;
 
@@ -83,6 +84,7 @@ public class Server {
         private Socket connection;
         private String messageReceived;
         private PrintWriter serverMessage;
+        private BufferedReader clientMessage;
 
 
         private ClientHandler(Socket connection) throws IOException {
@@ -90,6 +92,7 @@ public class Server {
             this.connection = connection;
             playerList.add(new Player(15,15));
             serverMessage = new PrintWriter(connection.getOutputStream(), true);
+            clientMessage = new BufferedReader(new InputStreamReader(connection.getInputStream()));
         }
 
 
@@ -146,8 +149,7 @@ public class Server {
 
         private String messageReceived() throws IOException {
 
-            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            return in.readLine();
+            return clientMessage.readLine();
 
         }
 
@@ -189,7 +191,7 @@ public class Server {
 
                 case "B":
 
-                    bulletList.add(new Bullet());
+                    bulletList.add(new Bullet(Integer.parseInt(splitedMessage[2]) * Grid.CELLSIZE, Integer.parseInt(splitedMessage[3]) * Grid.CELLSIZE));
                     return playerBulletColision();
 
                 default:

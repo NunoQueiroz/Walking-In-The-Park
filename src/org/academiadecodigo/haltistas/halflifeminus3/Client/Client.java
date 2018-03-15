@@ -12,10 +12,11 @@ import java.util.concurrent.Executors;
 public class Client {
 
     public static void main(String[] args) {
-        Grid grid = new Grid(50, 50, 0, 0);
-        grid.init();
-
         Player player = new Player(10, 10);
+
+        Grid grid = new Grid(50, 50, 0, 0, player);
+
+        grid.init();
         player.init();
 
         Client client = new Client(9090, player, 0, grid);
@@ -88,12 +89,21 @@ public class Client {
 
     public class ReceiveInfo implements Runnable {
 
+        private BufferedReader serverMessage;
+
+        public ReceiveInfo(){
+            try {
+                serverMessage = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            }catch (IOException e){
+                e.printStackTrace();
+            }
+
+        }
+
+
         public String receive() throws IOException {
 
-            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            String mess = in.readLine();
-
-            return mess;
+            return serverMessage.readLine();
 
         }
 
