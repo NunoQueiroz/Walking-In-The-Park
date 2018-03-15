@@ -1,20 +1,24 @@
 package org.academiadecodigo.haltistas.halflifeminus3;
 
+import org.academiadecodigo.haltistas.halflifeminus3.BackGround.Grid;
 import org.academiadecodigo.haltistas.halflifeminus3.Client.Player;
 import org.academiadecodigo.simplegraphics.keyboard.Keyboard;
 import org.academiadecodigo.simplegraphics.keyboard.KeyboardEvent;
 import org.academiadecodigo.simplegraphics.keyboard.KeyboardEventType;
 import org.academiadecodigo.simplegraphics.keyboard.KeyboardHandler;
 
-public class Controlls implements KeyboardHandler {
+public class Controls implements KeyboardHandler {
 
     private Player player;
     private volatile boolean clicked;
+    private Grid grid;
 
-    public Controlls(Player player) {
+
+    public Controls(Player player, Grid grid) {
 
         clicked = false;
         this.player = player;
+        this.grid = grid;
     }
 
 
@@ -59,21 +63,25 @@ public class Controlls implements KeyboardHandler {
             case KeyboardEvent.KEY_RIGHT:
                 clicked = true;
                 player.setCol(1);
+                grid.moveRight();
                 break;
 
             case KeyboardEvent.KEY_LEFT:
                 clicked = true;
                 player.setCol(-1);
+                grid.moveLeft();
                 break;
 
             case KeyboardEvent.KEY_UP:
                 clicked = true;
                 player.setRow(-1);
+                grid.moveUp();
                 break;
 
             case KeyboardEvent.KEY_DOWN:
                 clicked = true;
                 player.setRow(1);
+                grid.moveDown();
                 break;
 
             default:

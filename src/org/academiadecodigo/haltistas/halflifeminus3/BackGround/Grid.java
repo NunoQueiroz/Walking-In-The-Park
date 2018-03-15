@@ -1,5 +1,6 @@
 package org.academiadecodigo.haltistas.halflifeminus3.BackGround;
 
+import org.academiadecodigo.haltistas.halflifeminus3.Client.Player;
 import org.academiadecodigo.simplegraphics.pictures.Picture;
 
 public class Grid {
@@ -15,7 +16,7 @@ public class Grid {
     public static final int CAMERA_WIDHT = 20;
 
 
-    public Grid (int totalCol, int totalRow, int currentCol, int currentRow) {
+    public  Grid (int totalCol, int totalRow, int currentCol, int currentRow) {
         this.totalCol = totalCol;
         this.totalRow = totalRow;
         this.grid = new Picture[totalCol][totalRow];
@@ -30,10 +31,12 @@ public class Grid {
                 grid[col][row] = new Picture(col * CELLSIZE + PADDING, row * CELLSIZE + PADDING, "assets/grass_tile.jpg");
             }
         }
+
+        camera();
     }
 
     public void camera() {
-        translate(-currentCol, -currentRow);
+        //translate(-currentCol, -currentRow);
 
         for (int col = currentCol; col < CAMERA_WIDHT + currentCol; col++) {
             for (int row = currentRow; row < CAMERA_HEIGHT + currentRow; row++) {
@@ -110,5 +113,27 @@ public class Grid {
 
     }
 
+    public int getCurrentCol(){
 
+        return currentCol;
+    }
+
+    public int getCurrentRow(){
+
+        return currentRow;
+
+    }
+
+
+    public boolean isInView(Player player) {
+
+        System.out.println(player);
+        System.out.println(currentCol + " " + currentRow);
+
+        int playerCol = player.getCol();
+        int playerRow = player.getRow();
+
+        return (playerCol >= currentCol && playerCol <= currentCol + CAMERA_WIDHT) &&
+                (playerRow >= currentRow && playerRow <= currentRow + CAMERA_HEIGHT);
+    }
 }

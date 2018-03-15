@@ -82,13 +82,14 @@ public class Server {
 
         private Socket connection;
         private String messageReceived;
+        private PrintWriter serverMessage;
 
 
-        private ClientHandler(Socket connection) {
+        private ClientHandler(Socket connection) throws IOException {
 
             this.connection = connection;
-            playerList.add(new Player());
-
+            playerList.add(new Player(15,15));
+            serverMessage = new PrintWriter(connection.getOutputStream(), true);
         }
 
 
@@ -126,9 +127,9 @@ public class Server {
 
             for (int i = 0; i < clientHandlerList.size(); i++) {
 
-                /*if (clientHandlerList.get(i).equals(this)) {
+                if (clientHandlerList.get(i).equals(this)) {
                     continue;
-                }*/
+                }
 
                 clientHandlerList.get(i).send(message);
 
@@ -140,9 +141,7 @@ public class Server {
 
         private void send(String message) throws IOException {
 
-            PrintWriter serverMessage = new PrintWriter(connection.getOutputStream(), true);
             serverMessage.println(message);
-
         }
 
         private String messageReceived() throws IOException {
@@ -180,6 +179,7 @@ public class Server {
             switch (splitedMessage[0]) {
 
                 case "M":
+
 
                     playerList.get(new Integer(splitedMessage[1])).setCol(new Integer(splitedMessage[2]));
                     playerList.get(new Integer(splitedMessage[1])).setRow(new Integer(splitedMessage[3]));
