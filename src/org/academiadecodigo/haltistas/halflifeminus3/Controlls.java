@@ -21,6 +21,8 @@ public class Controlls implements KeyboardHandler {
     public void move() {
 
         Keyboard k = new Keyboard(this);
+
+
         KeyboardEvent event = new KeyboardEvent();
         event.setKey(KeyboardEvent.KEY_RIGHT);
         event.setKeyboardEventType(KeyboardEventType.KEY_PRESSED);
@@ -31,20 +33,18 @@ public class Controlls implements KeyboardHandler {
         event1.setKeyboardEventType(KeyboardEventType.KEY_PRESSED);
         k.addEventListener(event1);
 
-        KeyboardEvent event2 = new KeyboardEvent();
-        event2.setKey(KeyboardEvent.KEY_LEFT);
-        event2.setKeyboardEventType(KeyboardEventType.KEY_RELEASED);
-        k.addEventListener(event2);
+        KeyboardEvent event4 = new KeyboardEvent();
+        event4.setKey(KeyboardEvent.KEY_UP);
+        event4.setKeyboardEventType(KeyboardEventType.KEY_PRESSED);
+        k.addEventListener(event4);
 
-        KeyboardEvent event3 = new KeyboardEvent();
-        event3.setKey(KeyboardEvent.KEY_LEFT);
-        event3.setKeyboardEventType(KeyboardEventType.KEY_RELEASED);
-        k.addEventListener(event3);
-
-
+        KeyboardEvent event5 = new KeyboardEvent();
+        event5.setKey(KeyboardEvent.KEY_DOWN);
+        event5.setKeyboardEventType(KeyboardEventType.KEY_PRESSED);
+        k.addEventListener(event5);
     }
 
-    public boolean getClicked(){
+    public boolean getClicked() {
 
         return clicked;
 
@@ -66,6 +66,16 @@ public class Controlls implements KeyboardHandler {
                 player.setCol(-1);
                 break;
 
+            case KeyboardEvent.KEY_UP:
+                clicked = true;
+                player.setRow(-1);
+                break;
+
+            case KeyboardEvent.KEY_DOWN:
+                clicked = true;
+                player.setRow(1);
+                break;
+
             default:
 
                 System.out.println("Deu erro no teclado");
@@ -73,30 +83,15 @@ public class Controlls implements KeyboardHandler {
 
         }
 
+    }
 
+    public void reset() {
+        clicked = false;
     }
 
 
     @Override
     public void keyReleased(KeyboardEvent keyboardEvent) {
-
-        switch (keyboardEvent.getKey()) {
-
-            case KeyboardEvent.KEY_LEFT:
-                clicked = false;
-                break;
-
-            case KeyboardEvent.KEY_RIGHT:
-                clicked = false;
-                break;
-
-
-            default:
-
-                System.out.println("Adeus");
-                break;
-        }
-
 
     }
 

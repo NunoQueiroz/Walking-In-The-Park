@@ -63,6 +63,7 @@ public class Client {
 
                     out.flush();
 
+                    controlls.reset();
                 }
 
             }
@@ -81,7 +82,6 @@ public class Client {
 
             BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             String mess = in.readLine();
-            System.out.println(mess);
             return mess;
 
         }
@@ -97,7 +97,7 @@ public class Client {
 
 
                     String messageReceived = receive();
-                    //System.out.println(messageReceived);
+                    System.out.println(messageReceived);
 
                 }
 

@@ -17,7 +17,7 @@ public class EventCoordinator {
 
     public void eventScheduler() {
 
-        eventScheduler.scheduleAtFixedRate(new Schedueler(), 10000, 10000);
+        eventScheduler.schedule(new Schedueler(), 10000, 10000);
 
 
     }
@@ -29,8 +29,11 @@ public class EventCoordinator {
         @Override
         public void run() {
 
+            synchronized (this) {
 
-            server.start();
+                server.start();
+
+            }
 
 
         }
