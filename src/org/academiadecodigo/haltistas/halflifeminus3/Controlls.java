@@ -1,12 +1,18 @@
 package org.academiadecodigo.haltistas.halflifeminus3;
 
 import org.academiadecodigo.haltistas.halflifeminus3.Client.Player;
+import org.academiadecodigo.simplegraphics.graphics.Rectangle;
 import org.academiadecodigo.simplegraphics.keyboard.Keyboard;
 import org.academiadecodigo.simplegraphics.keyboard.KeyboardEvent;
 import org.academiadecodigo.simplegraphics.keyboard.KeyboardEventType;
 import org.academiadecodigo.simplegraphics.keyboard.KeyboardHandler;
+import org.academiadecodigo.simplegraphics.mouse.Mouse;
+import org.academiadecodigo.simplegraphics.mouse.MouseEvent;
+import org.academiadecodigo.simplegraphics.mouse.MouseEventType;
+import org.academiadecodigo.simplegraphics.mouse.MouseHandler;
+import org.academiadecodigo.simplegraphics.pictures.Picture;
 
-public class Controlls implements KeyboardHandler {
+public class Controlls implements MouseHandler, KeyboardHandler {
 
     private Player player;
     private volatile boolean clicked;
@@ -42,6 +48,10 @@ public class Controlls implements KeyboardHandler {
         event5.setKey(KeyboardEvent.KEY_DOWN);
         event5.setKeyboardEventType(KeyboardEventType.KEY_PRESSED);
         k.addEventListener(event5);
+
+        Mouse m = new Mouse(this);
+        m.addEventListener(MouseEventType.MOUSE_CLICKED);
+        m.addEventListener(MouseEventType.MOUSE_MOVED);
     }
 
     public boolean getClicked() {
@@ -92,6 +102,59 @@ public class Controlls implements KeyboardHandler {
 
     @Override
     public void keyReleased(KeyboardEvent keyboardEvent) {
+
+    }
+
+    private Rectangle jogador;
+    private Picture bullet;
+    private volatile boolean shoot;
+
+    private int numberOfCycles = 30;
+
+
+    private double posXtoShoot;
+    private double posYtoShoot;
+
+    @Override
+    public void mouseClicked(MouseEvent event){
+
+        shoot = true;
+
+        double posXmouseCursor = event.getX();
+        double posYmouseCursor = event.getY();
+
+        posXtoShoot = (posXmouseCursor-jogador.getX())/numberOfCycles;
+        posYtoShoot = (posYmouseCursor-jogador.getY())/numberOfCycles;
+
+    }
+
+    public void shoot() {
+        int t = 0;
+
+        while (t <= numberOfCycles) {
+            try {
+                Thread.sleep(30);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            bullet.translate(posXtoShoot, posYtoShoot);
+            t++;
+
+        }
+
+
+        while (!shoot) {
+
+        }
+
+        bullet.translate(jogador.getX() - jogador.getX(), jogador.getY() - jogador.getY());
+        shoot();
+    }
+
+
+    @Override
+    public void mouseMoved(MouseEvent event){
 
     }
 
