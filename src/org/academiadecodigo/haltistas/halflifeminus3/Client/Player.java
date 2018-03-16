@@ -1,22 +1,28 @@
 package org.academiadecodigo.haltistas.halflifeminus3.Client;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class Player {
 
-
+    private List<Bullet> bullets;
+    private volatile boolean shoot;
     private int col;
     private int row;
 
+    private static final int MAX_BULLETS = 12;
 
 
+    public Player() {
+        this.bullets = new LinkedList<>();
 
 
-
+    }
 
 
     public void setCol(int col) {
 
         this.col += col;
-
     }
 
 
@@ -26,12 +32,12 @@ public class Player {
 
     }
 
-    public int getCol(){
+    public int getCol() {
 
         return col;
     }
 
-    public int getRow(){
+    public int getRow() {
 
         return row;
 
@@ -45,5 +51,29 @@ public class Player {
         return col - CELLSIZE;
     }*/
 
+    public void createBullet() {
+
+        if (bullets.size() < MAX_BULLETS) {
+
+            bullets.add(new Bullet(col, row));
+        }
+
+
+    }
+
+
+    public void shoot() {
+
+
+        if (bullets.isEmpty()) {
+            return;
+        }
+
+
+    }
+
 
 }
+
+
+

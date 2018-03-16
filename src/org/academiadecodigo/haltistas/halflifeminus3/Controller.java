@@ -1,7 +1,8 @@
 package org.academiadecodigo.haltistas.halflifeminus3;
 
+import org.academiadecodigo.haltistas.halflifeminus3.BackGround.Grid;
+import org.academiadecodigo.haltistas.halflifeminus3.Client.Bullet;
 import org.academiadecodigo.haltistas.halflifeminus3.Client.Player;
-import org.academiadecodigo.simplegraphics.graphics.Rectangle;
 import org.academiadecodigo.simplegraphics.keyboard.Keyboard;
 import org.academiadecodigo.simplegraphics.keyboard.KeyboardEvent;
 import org.academiadecodigo.simplegraphics.keyboard.KeyboardEventType;
@@ -10,19 +11,20 @@ import org.academiadecodigo.simplegraphics.mouse.Mouse;
 import org.academiadecodigo.simplegraphics.mouse.MouseEvent;
 import org.academiadecodigo.simplegraphics.mouse.MouseEventType;
 import org.academiadecodigo.simplegraphics.mouse.MouseHandler;
-import org.academiadecodigo.simplegraphics.pictures.Picture;
 
-public class Controlls implements MouseHandler, KeyboardHandler {
+public class Controller implements MouseHandler, KeyboardHandler {
 
     private Player player;
     private volatile boolean clicked;
+    private Bullet bullet;
 
-    public Controlls(Player player) {
+    public Controller(Player player, Bullet bullet) {
 
         clicked = false;
         this.player = player;
-    }
+        this.bullet = bullet;
 
+    }
 
     public void move() {
 
@@ -55,7 +57,6 @@ public class Controlls implements MouseHandler, KeyboardHandler {
     }
 
     public boolean getClicked() {
-
         return clicked;
 
     }
@@ -67,35 +68,40 @@ public class Controlls implements MouseHandler, KeyboardHandler {
 
 
             case KeyboardEvent.KEY_RIGHT:
+
                 clicked = true;
                 player.setCol(1);
                 break;
 
             case KeyboardEvent.KEY_LEFT:
+
                 clicked = true;
                 player.setCol(-1);
                 break;
 
             case KeyboardEvent.KEY_UP:
+
                 clicked = true;
                 player.setRow(-1);
                 break;
 
             case KeyboardEvent.KEY_DOWN:
+
                 clicked = true;
                 player.setRow(1);
                 break;
 
             default:
 
-                System.out.println("Deu erro no teclado");
+                System.out.println("");
                 break;
 
         }
 
     }
 
-    public void reset() {
+    public void reset()
+    {
         clicked = false;
     }
 
@@ -105,58 +111,22 @@ public class Controlls implements MouseHandler, KeyboardHandler {
 
     }
 
-    private Rectangle jogador;
-    private Picture bullet;
-    private volatile boolean shoot;
-
-    private int numberOfCycles = 30;
-
-
-    private double posXtoShoot;
-    private double posYtoShoot;
 
     @Override
-    public void mouseClicked(MouseEvent event){
+    public void mouseClicked(MouseEvent event) {
 
-        shoot = true;
+        bullet.setFinalX(event.getX());
+        bullet.setFinalY(event.getY());
 
-        double posXmouseCursor = event.getX();
-        double posYmouseCursor = event.getY();
+        player.createBullet();
 
-        posXtoShoot = (posXmouseCursor-jogador.getX())/numberOfCycles;
-        posYtoShoot = (posYmouseCursor-jogador.getY())/numberOfCycles;
 
     }
-
-    public void shoot() {
-        int t = 0;
-
-        while (t <= numberOfCycles) {
-            try {
-                Thread.sleep(30);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            bullet.translate(posXtoShoot, posYtoShoot);
-            t++;
-
-        }
-
-
-        while (!shoot) {
-
-        }
-
-        bullet.translate(jogador.getX() - jogador.getX(), jogador.getY() - jogador.getY());
-        shoot();
-    }
-
 
     @Override
-    public void mouseMoved(MouseEvent event){
+    public void mouseMoved(MouseEvent event) {
 
     }
-
-
 }
+
+

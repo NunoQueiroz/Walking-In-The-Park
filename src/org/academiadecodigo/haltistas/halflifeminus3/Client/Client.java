@@ -1,6 +1,6 @@
 package org.academiadecodigo.haltistas.halflifeminus3.Client;
 
-import org.academiadecodigo.haltistas.halflifeminus3.Controlls;
+import org.academiadecodigo.haltistas.halflifeminus3.Controller;
 
 import java.io.*;
 import java.net.Socket;
@@ -21,15 +21,16 @@ public class Client {
     private Socket connection;
     private Player player;
     private int playerNumber;
-    private Controlls controlls;
+    private Controller controller;
     private volatile int col;
     private volatile int row;
+    private Bullet bullet;
 
 
     public Client(int port, Player player, int playerNumber) {
 
         try {
-            this.controlls = new Controlls(player);
+            this.controller = new Controller(player,bullet);
             this.playerNumber = playerNumber;
             this.player = player;
             connection = new Socket("localhost", port);
@@ -44,7 +45,7 @@ public class Client {
 
         try {
 
-            controlls.move();
+            controller.move();
 
             ExecutorService cashedPoll = Executors.newCachedThreadPool();
 
@@ -54,7 +55,7 @@ public class Client {
 
             while (true) {
 
-                if (controlls.getClicked()) {
+                if (controller.getClicked()) {
 
                     col = player.getCol();
                     row = player.getRow();
@@ -63,7 +64,7 @@ public class Client {
 
                     out.flush();
 
-                    controlls.reset();
+                    controller.reset();
                 }
 
             }
