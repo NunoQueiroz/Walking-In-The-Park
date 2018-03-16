@@ -17,19 +17,20 @@ public class Controller implements MouseHandler, KeyboardHandler {
     private Player player;
     private volatile boolean clicked;
     private Bullet bullet;
+    private Grid grid;
 
-    public Controller(Player player, Bullet bullet) {
+    public Controller(Player player, Bullet bullet, Grid grid) {
 
         clicked = false;
         this.player = player;
         this.bullet = bullet;
+        this.grid = grid;
 
     }
 
     public void move() {
 
         Keyboard k = new Keyboard(this);
-
 
         KeyboardEvent event = new KeyboardEvent();
         event.setKey(KeyboardEvent.KEY_RIGHT);
@@ -71,24 +72,28 @@ public class Controller implements MouseHandler, KeyboardHandler {
 
                 clicked = true;
                 player.setCol(1);
+                grid.moveRight();
                 break;
 
             case KeyboardEvent.KEY_LEFT:
 
                 clicked = true;
                 player.setCol(-1);
+                grid.moveLeft();
                 break;
 
             case KeyboardEvent.KEY_UP:
 
                 clicked = true;
                 player.setRow(-1);
+                grid.moveUp();
                 break;
 
             case KeyboardEvent.KEY_DOWN:
 
                 clicked = true;
                 player.setRow(1);
+                grid.moveDown();
                 break;
 
             default:

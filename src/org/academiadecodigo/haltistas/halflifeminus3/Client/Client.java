@@ -2,17 +2,25 @@ package org.academiadecodigo.haltistas.halflifeminus3.Client;
 
 import org.academiadecodigo.haltistas.halflifeminus3.Controller;
 
+import org.academiadecodigo.haltistas.halflifeminus3.BackGround.Grid;
+
 import java.io.*;
 import java.net.Socket;
+import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Client {
 
     public static void main(String[] args) {
+        Player player = new Player(10, 10);
 
-        Player player = new Player();
-        Client client = new Client(9090, player, 0);
+        Grid grid = new Grid(50, 50, 0, 0, player);
+
+        grid.init();
+        player.init();
+
+        Client client = new Client(9090, player, 0, grid);
         client.start();
 
     }
@@ -25,15 +33,18 @@ public class Client {
     private volatile int col;
     private volatile int row;
     private Bullet bullet;
+    private HashMap<Integer, Player> alltheplayers;
+    private Grid grid;
 
-
-    public Client(int port, Player player, int playerNumber) {
+    public Client(int port, Player player, int playerNumber, Grid grid) {
 
         try {
-            this.controller = new Controller(player,bullet);
+            this.controller = new Controller(player,bullet,grid);
+            this.grid = grid;
             this.playerNumber = playerNumber;
             this.player = player;
             connection = new Socket("localhost", port);
+            this.alltheplayers = new HashMap<>();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
@@ -57,6 +68,7 @@ public class Client {
 
                 if (controller.getClicked()) {
 
+
                     col = player.getCol();
                     row = player.getRow();
 
@@ -65,6 +77,7 @@ public class Client {
                     out.flush();
 
                     controller.reset();
+
                 }
 
             }
@@ -79,12 +92,59 @@ public class Client {
 
     public class ReceiveInfo implements Runnable {
 
+        private BufferedReader serverMessage;
+
+        public ReceiveInfo(){
+            try {
+                serverMessage = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            }catch (IOException e){
+                e.printStackTrace();
+            }
+
+        }
+
+
         public String receive() throws IOException {
 
-            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            String mess = in.readLine();
-            return mess;
+            return serverMessage.readLine();
 
+        }
+
+        public void move(String message) {
+
+            //System.out.println(message);
+            String[] split = message.split(" ");
+
+            if (split[0].equals("M")) {
+
+                System.out.println("dafuq");
+                Player enemy = alltheplayers.get(Integer.parseInt(split[1]));
+
+                if (enemy == null) {
+                    enemy = new Player(Integer.parseInt(split[2]), Integer.parseInt(split[3]));
+
+                    alltheplayers.put(Integer.parseInt(split[1]), enemy);
+                    enemy.init();
+                    System.out.println(Integer.parseInt(split[2]) + " " + Integer.parseInt(split[3]));
+                }
+
+                int col = enemy.getCol();
+                int row = enemy.getRow();
+                //System.out.println("col " + col + " row " + row);
+
+                enemy.setCol(Integer.parseInt(split[2]) - col);
+                enemy.setRow(Integer.parseInt(split[3]) - row);
+
+                enemy.translate(Integer.parseInt(split[2]) - col, Integer.parseInt(split[3]) - row);
+
+                if (!grid.isInView(enemy)) {
+                    System.out.println("delete");
+                    enemy.delete();
+                } else {
+                    System.out.println("show");
+                    enemy.draw();
+                }
+            }
         }
 
 
@@ -98,6 +158,7 @@ public class Client {
 
 
                     String messageReceived = receive();
+                    move(messageReceived);
                     System.out.println(messageReceived);
 
                 }

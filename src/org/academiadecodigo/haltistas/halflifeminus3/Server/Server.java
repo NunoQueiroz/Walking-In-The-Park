@@ -1,6 +1,7 @@
 package org.academiadecodigo.haltistas.halflifeminus3.Server;
 
 
+import org.academiadecodigo.haltistas.halflifeminus3.BackGround.Grid;
 import org.academiadecodigo.haltistas.halflifeminus3.Client.Bullet;
 import org.academiadecodigo.haltistas.halflifeminus3.Client.Player;
 
@@ -82,13 +83,16 @@ public class Server {
 
         private Socket connection;
         private String messageReceived;
+        private PrintWriter serverMessage;
+        private BufferedReader clientMessage;
 
 
-        private ClientHandler(Socket connection) {
+        private ClientHandler(Socket connection) throws IOException {
 
             this.connection = connection;
-            playerList.add(new Player());
-
+            playerList.add(new Player(15,15));
+            serverMessage = new PrintWriter(connection.getOutputStream(), true);
+            clientMessage = new BufferedReader(new InputStreamReader(connection.getInputStream()));
         }
 
 
@@ -126,9 +130,9 @@ public class Server {
 
             for (int i = 0; i < clientHandlerList.size(); i++) {
 
-                /*if (clientHandlerList.get(i).equals(this)) {
+                if (clientHandlerList.get(i).equals(this)) {
                     continue;
-                }*/
+                }
 
                 clientHandlerList.get(i).send(message);
 
@@ -140,15 +144,12 @@ public class Server {
 
         private void send(String message) throws IOException {
 
-            PrintWriter serverMessage = new PrintWriter(connection.getOutputStream(), true);
             serverMessage.println(message);
-
         }
 
         private String messageReceived() throws IOException {
 
-            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            return in.readLine();
+            return clientMessage.readLine();
 
         }
 
@@ -181,6 +182,7 @@ public class Server {
 
                 case "M":
 
+
                     playerList.get(new Integer(splitedMessage[1])).setCol(new Integer(splitedMessage[2]));
                     playerList.get(new Integer(splitedMessage[1])).setRow(new Integer(splitedMessage[3]));
 
@@ -189,7 +191,7 @@ public class Server {
 
                 case "B":
 
-                    bulletList.add(new Bullet());
+                    bulletList.add(new Bullet(Integer.parseInt(splitedMessage[2]) * Grid.CELLSIZE, Integer.parseInt(splitedMessage[3]) * Grid.CELLSIZE));
                     return playerBulletColision();
 
                 default:
