@@ -19,7 +19,7 @@ public class Game {
         grid = new Grid();
         camera = new Camera(0, 0, grid, player);
         controls = new Controls(camera);
-        client = new Client("localhost", 9000, this);
+        client = new Client("localhost", 9000, player, controls);
 
     }
 

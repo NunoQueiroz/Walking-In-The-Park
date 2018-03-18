@@ -22,6 +22,7 @@ public class Camera {
     }
 
     public void init() {
+
         int colP = (backCol + Camera.CAMERA_WIDTH) / 2 - 1;
         int rowP = (topRow + Camera.CAMERA_HEIGHT) / 2 - 1;
 

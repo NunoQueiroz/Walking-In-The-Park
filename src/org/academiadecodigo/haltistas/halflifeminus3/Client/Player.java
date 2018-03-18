@@ -47,25 +47,61 @@ public class Player {
 
     public void setLogicalCol(int logicCol) {
 
-        int limit = Camera.CAMERA_WIDTH / 2 - 1;
-
-        if (logicCol == limit) {
-            this.logicalCol = limit;
-            return;
-        }
-
         this.logicalCol += logicCol;
     }
 
     public void setLogicalRow(int logicRow) {
 
+        this.logicalRow += logicRow;
+    }
+
+    public void playerMoveUp() {
+
         int limit = Camera.CAMERA_HEIGHT / 2 - 1;
 
-        if (logicRow == limit) {
-            this.logicalRow = limit;
+        if (logicalRow <= limit) {
             return;
         }
-        this.logicalRow += logicRow;
+
+        setLogicalRow(-1);
+
+    }
+
+
+    public void playerMoveDown() {
+
+        int limit = Grid.MAX_ROW - Camera.CAMERA_HEIGHT / 2 - 1;
+
+        if (logicalRow >= limit) {
+            return;
+        }
+
+        setLogicalRow(1);
+
+    }
+
+    public void playerMoveRight() {
+
+        int limit = Grid.MAX_COL - Camera.CAMERA_WIDTH / 2 - 1;
+
+        if (logicalCol >= limit) {
+            return;
+        }
+
+        setLogicalCol(1);
+
+    }
+
+    public void playerMoveLeft() {
+
+        int limit = Camera.CAMERA_WIDTH / 2 - 1;
+
+        if (logicalCol <= limit) {
+            return;
+        }
+
+        setLogicalCol(-1);
+
     }
 
     public void move(int colMove, int rowMove) {

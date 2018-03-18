@@ -33,6 +33,7 @@ public class ClientHandler implements Runnable{
             while (true) {
 
                 String message = bufferedReader.readLine();
+                System.out.println(message);
                 server.broadcast(message, this);
 
             }
