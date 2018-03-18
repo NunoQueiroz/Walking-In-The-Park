@@ -99,6 +99,7 @@ public class Controls implements KeyboardHandler, MouseHandler {
         double finalY = mouseEvent.getY();
 
         camera.getPlayer().shoot(finalX, finalY);
+        pressedKey = true;
 
     }
 
