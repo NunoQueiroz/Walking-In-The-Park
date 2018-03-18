@@ -12,12 +12,13 @@ public class Client {
     private String hostName;
     private int portNumber;
     private PrintWriter printWriter;
+    private Player player;
 
-
-    public Client(String hostName, int portNumber) {
+    public Client(String hostName, int portNumber, Player player) {
 
         this.hostName = hostName;
         this.portNumber = portNumber;
+        this.player = player;
 
     }
 

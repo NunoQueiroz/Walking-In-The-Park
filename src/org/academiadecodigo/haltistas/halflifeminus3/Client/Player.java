@@ -18,16 +18,20 @@ public class Player {
     private LinkedList<Bullet> bullets;
     private static final int MAX_BULLETS = 15;
 
-    public Player(int col, int row) {
-        this.col = col;
-        this.row = row;
+    public Player() {
+
+
+
+    }
+
+    public void init(int colP, int rowP) {
+        this.col = colP;
+        this.row = rowP;
+
         this.picture = new Picture(col * Grid.CELLSIZE + Grid.PADDING,
                 row * Grid.CELLSIZE + Grid.PADDING, "assets/player_sprite3.png");
         this.bullets = new LinkedList<>();
 
-    }
-
-    public void init() {
         picture.draw();
         this.logicalCol = col;
         this.logicalRow = row;
