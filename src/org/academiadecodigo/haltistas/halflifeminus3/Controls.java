@@ -5,8 +5,12 @@ import org.academiadecodigo.simplegraphics.keyboard.Keyboard;
 import org.academiadecodigo.simplegraphics.keyboard.KeyboardEvent;
 import org.academiadecodigo.simplegraphics.keyboard.KeyboardEventType;
 import org.academiadecodigo.simplegraphics.keyboard.KeyboardHandler;
+import org.academiadecodigo.simplegraphics.mouse.Mouse;
+import org.academiadecodigo.simplegraphics.mouse.MouseEvent;
+import org.academiadecodigo.simplegraphics.mouse.MouseEventType;
+import org.academiadecodigo.simplegraphics.mouse.MouseHandler;
 
-public class Controls implements KeyboardHandler {
+public class Controls implements KeyboardHandler, MouseHandler {
 
     private Camera camera;
 
@@ -19,6 +23,7 @@ public class Controls implements KeyboardHandler {
     public void init() {
 
         Keyboard k = new Keyboard(this);
+        Mouse m = new Mouse(this);
 
         KeyboardEvent event = new KeyboardEvent();
         event.setKey(KeyboardEvent.KEY_RIGHT);
@@ -40,8 +45,8 @@ public class Controls implements KeyboardHandler {
         event3.setKeyboardEventType(KeyboardEventType.KEY_PRESSED);
         k.addEventListener(event3);
 
-
-
+        m.addEventListener(MouseEventType.MOUSE_CLICKED);
+        m.addEventListener(MouseEventType.MOUSE_MOVED);
 
     }
 
@@ -71,6 +76,21 @@ public class Controls implements KeyboardHandler {
     @Override
     public void keyReleased(KeyboardEvent keyboardEvent) {
 
+
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent mouseEvent) {
+
+        double finalX = mouseEvent.getX();
+        double finalY = mouseEvent.getY();
+
+        camera.getPlayer().shoot(finalX, finalY);
+
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent mouseEvent) {
 
     }
 }

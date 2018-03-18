@@ -17,6 +17,7 @@ public class Bullet {
         this.finalX = finalX;
         this.finalY = finalY;
         this.picture = new Picture( initialX, initialY, "assets/bullet.png");
+        picture.draw();
     }
 
     public void move () {

@@ -24,7 +24,6 @@ public class Game {
         camera.init();
         controls.init();
 
-
     }
 
 

@@ -118,4 +118,8 @@ public class Camera {
         player.debug();
         topRow++;
     }
+
+    public Player getPlayer () {
+        return player;
+    }
 }

@@ -69,16 +69,17 @@ public class Player {
         picture.translate(colMove * Grid.CELLSIZE, rowMove * Grid.CELLSIZE);
     }
 
-    public void shoot(int finalX, int finalY) {
+    public void shoot(double finalX, double finalY) {
 
         if (bullets.size() >= MAX_BULLETS) {
             return;
         }
 
-        double inicialX = Grid.PADDING + col * Grid.CELLSIZE;
-        double inicialY = Grid.PADDING + row * Grid.CELLSIZE;
+        double inicialX = (col + 1) * Grid.CELLSIZE;
+        double inicialY = (row + 1) * Grid.CELLSIZE;
 
         bullets.add(new Bullet(inicialX, inicialY, finalX, finalY));
+
     }
 
     public void bulletsMove() {
