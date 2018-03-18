@@ -13,14 +13,16 @@ public class Camera {
     private Player player;
 
 
-    public Camera(int backCol, int topRow, Grid grid) {
+    public Camera(int backCol, int topRow, Grid grid, Player player) {
         this.backCol = backCol;
         this.topRow = topRow;
         this.grid = grid;
+        this.player = player;
 
     }
 
     public void init() {
+
         int colP = (backCol + Camera.CAMERA_WIDTH) / 2 - 1;
         int rowP = (topRow + Camera.CAMERA_HEIGHT) / 2 - 1;
 
@@ -34,8 +36,7 @@ public class Camera {
 
         }
 
-        this.player = new Player(colP, rowP);
-        player.init();
+        player.init(colP, rowP);
     }
 
     public void moveRight() {

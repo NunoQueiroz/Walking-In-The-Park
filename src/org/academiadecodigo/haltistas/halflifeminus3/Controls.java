@@ -13,11 +13,13 @@ import org.academiadecodigo.simplegraphics.mouse.MouseHandler;
 public class Controls implements KeyboardHandler, MouseHandler {
 
     private Camera camera;
-
+    private volatile boolean pressedKey;
 
     public Controls(Camera camera) {
 
         this.camera = camera;
+        this.pressedKey = false;
+
     }
 
     public void init() {
@@ -52,23 +54,31 @@ public class Controls implements KeyboardHandler, MouseHandler {
 
     @Override
     public void keyPressed(KeyboardEvent keyboardEvent) {
+
         switch (keyboardEvent.getKey()) {
             case KeyboardEvent.KEY_RIGHT:
                 camera.moveRight();
+                camera.getPlayer().playerMoveRight();
+                pressedKey = true;
                 break;
             case KeyboardEvent.KEY_LEFT:
                 camera.moveLeft();
+                camera.getPlayer().playerMoveLeft();
+                pressedKey = true;
                 break;
             case KeyboardEvent.KEY_UP:
                 camera.moveUp();
+                camera.getPlayer().playerMoveUp();
+                pressedKey = true;
                 break;
             case KeyboardEvent.KEY_DOWN:
                 camera.moveDown();
+                camera.getPlayer().playerMoveDown();
+                pressedKey = true;
                 break;
             default:
                 System.out.println("JVM");
                 break;
-
         }
 
     }
@@ -76,7 +86,10 @@ public class Controls implements KeyboardHandler, MouseHandler {
     @Override
     public void keyReleased(KeyboardEvent keyboardEvent) {
 
+    }
 
+    public boolean isPressedKey() {
+        return pressedKey;
     }
 
     @Override
@@ -93,4 +106,8 @@ public class Controls implements KeyboardHandler, MouseHandler {
     public void mouseMoved(MouseEvent mouseEvent) {
 
     }
+    public void resetPressedKey() {
+        pressedKey = false;
+    }
+
 }

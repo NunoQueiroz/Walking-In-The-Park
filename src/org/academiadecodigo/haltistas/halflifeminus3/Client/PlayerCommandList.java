@@ -11,5 +11,7 @@ public class PlayerCommandList {
     public static String bullet (double initialX, double initialY, double finalX, double finalY) {
 
         return "B " + initialX + " " + initialY + " " + finalX + " " + finalY;
+
     }
+
 }

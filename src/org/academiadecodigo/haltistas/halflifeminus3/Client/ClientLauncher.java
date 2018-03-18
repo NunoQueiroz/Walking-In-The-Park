@@ -7,7 +7,7 @@ public class ClientLauncher {
         String hostName = "localhost";
         int portNumber = 9000;
 
-        new Client(hostName, portNumber).start();
+        //new Client(hostName, portNumber).start();
 
     }
 
