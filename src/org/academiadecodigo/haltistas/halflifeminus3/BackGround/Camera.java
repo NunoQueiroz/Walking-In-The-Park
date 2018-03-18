@@ -1,15 +1,16 @@
 package org.academiadecodigo.haltistas.halflifeminus3.BackGround;
 
-import com.sun.org.apache.bcel.internal.generic.RETURN;
+import org.academiadecodigo.haltistas.halflifeminus3.Client.Player;
 
 public class Camera {
 
-    private static final int CAMERA_WIDTH = 25;
-    private static final int CAMERA_HEIGHT = 15;
+    public static final int CAMERA_WIDTH = 24;
+    public static final int CAMERA_HEIGHT = 14;
 
     private int backCol;
     private int topRow;
     private Grid grid;
+    private Player player;
 
 
     public Camera(int backCol, int topRow, Grid grid) {
@@ -20,9 +21,10 @@ public class Camera {
     }
 
     public void init() {
+        int colP = (backCol + Camera.CAMERA_WIDTH) / 2 - 1;
+        int rowP = (topRow + Camera.CAMERA_HEIGHT) / 2 - 1;
 
         grid.translateGrid(-backCol, -topRow);
-
 
         for (int col = backCol; col < backCol + CAMERA_WIDTH; col++) {
             for (int row = topRow; row < topRow + CAMERA_HEIGHT; row++) {
@@ -31,6 +33,9 @@ public class Camera {
             }
 
         }
+
+        this.player = new Player(colP, rowP);
+        player.init();
     }
 
     public void moveRight() {
@@ -38,7 +43,6 @@ public class Camera {
         System.out.println(backCol + "C");
 
         if (backCol + CAMERA_WIDTH >= Grid.MAX_COL) {
-
             return;
 
         }
@@ -49,7 +53,9 @@ public class Camera {
             grid.getGrid()[backCol + CAMERA_WIDTH][row].draw();
 
         }
+
         grid.translateGrid(-1, 0);
+        player.debug();
         backCol++;
 
     }
@@ -63,13 +69,14 @@ public class Camera {
 
         }
 
-
         for (int row = topRow; row < topRow + CAMERA_HEIGHT; row++) {
             grid.getGrid()[backCol + CAMERA_WIDTH - 1][row].delete();
             grid.getGrid()[backCol - 1][row].draw();
 
         }
+
         grid.translateGrid(1, 0);
+        player.debug();
         backCol--;
 
     }
@@ -89,6 +96,7 @@ public class Camera {
         }
 
         grid.translateGrid(0, 1);
+        player.debug();
         topRow--;
     }
 
@@ -100,7 +108,6 @@ public class Camera {
 
         }
 
-
         for (int col = backCol; col < backCol + CAMERA_WIDTH; col++) {
             grid.getGrid()[col][topRow].delete();
             grid.getGrid()[col][topRow + CAMERA_HEIGHT].draw();
@@ -108,6 +115,7 @@ public class Camera {
         }
 
         grid.translateGrid(0, -1);
+        player.debug();
         topRow++;
     }
 }

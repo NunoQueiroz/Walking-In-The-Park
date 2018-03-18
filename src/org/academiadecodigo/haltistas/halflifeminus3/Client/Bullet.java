@@ -11,12 +11,12 @@ public class Bullet {
     private static final int NUMBER_CICLES = 20;
     private Picture picture;
 
-    public Bullet (double inicialX, double inicialY, double finalX, double finalY) {
-        this.inicialX = inicialX;
-        this.inicialY = inicialY;
+    public Bullet (double initialX, double initialY, double finalX, double finalY) {
+        this.inicialX =  initialX;
+        this.inicialY = initialY;
         this.finalX = finalX;
         this.finalY = finalY;
-        this.picture = new Picture(inicialX, inicialY, "assets/bullet.png");
+        this.picture = new Picture( initialX, initialY, "assets/bullet.png");
     }
 
     public void move () {
@@ -35,4 +35,5 @@ public class Bullet {
     public double getY () {
         return picture.getY();
     }
+
 }

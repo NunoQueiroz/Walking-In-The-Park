@@ -1,5 +1,6 @@
 package org.academiadecodigo.haltistas.halflifeminus3.Client;
 
+import org.academiadecodigo.haltistas.halflifeminus3.BackGround.Camera;
 import org.academiadecodigo.haltistas.halflifeminus3.BackGround.Grid;
 import org.academiadecodigo.simplegraphics.pictures.Picture;
 
@@ -17,7 +18,7 @@ public class Player {
     private LinkedList<Bullet> bullets;
     private static final int MAX_BULLETS = 15;
 
-    public Player (int col, int row) {
+    public Player(int col, int row) {
         this.col = col;
         this.row = row;
         this.picture = new Picture(col * Grid.CELLSIZE + Grid.PADDING,
@@ -26,26 +27,49 @@ public class Player {
 
     }
 
-    public void init () {
+    public void init() {
         picture.draw();
         this.logicalCol = col;
         this.logicalRow = row;
     }
 
-    public void setLogicalCol(int logicalCol) {
-        this.logicalCol += logicalCol;
+    public int getLogicalCol() {
+        return logicalCol;
     }
 
-    public void setLogicalRow(int logicalRow) {
-        this.logicalRow += logicalRow;
+    public int getLogicalRow() {
+        return logicalRow;
     }
 
-    public void move (int colMove, int rowMove) {
+    public void setLogicalCol(int logicCol) {
+
+        int limit = Camera.CAMERA_WIDTH / 2 - 1;
+
+        if (logicCol == limit) {
+            this.logicalCol = limit;
+            return;
+        }
+
+        this.logicalCol += logicCol;
+    }
+
+    public void setLogicalRow(int logicRow) {
+
+        int limit = Camera.CAMERA_HEIGHT / 2 - 1;
+
+        if (logicRow == limit) {
+            this.logicalRow = limit;
+            return;
+        }
+        this.logicalRow += logicRow;
+    }
+
+    public void move(int colMove, int rowMove) {
 
         picture.translate(colMove * Grid.CELLSIZE, rowMove * Grid.CELLSIZE);
     }
 
-    public void shoot (int finalX, int finalY) {
+    public void shoot(int finalX, int finalY) {
 
         if (bullets.size() >= MAX_BULLETS) {
             return;
@@ -57,10 +81,16 @@ public class Player {
         bullets.add(new Bullet(inicialX, inicialY, finalX, finalY));
     }
 
-    public void bulletsMove () {
+    public void bulletsMove() {
 
         for (int i = 0; i < bullets.size(); i++) {
             bullets.get(i).move();
         }
     }
+
+    public void debug () {
+        picture.delete();
+        picture.draw();
+    }
+
 }
