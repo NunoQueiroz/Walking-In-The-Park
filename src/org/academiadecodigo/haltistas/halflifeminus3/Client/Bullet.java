@@ -22,6 +22,7 @@ public class Bullet {
 
     public void move () {
 
+
         double translateX = (finalX - inicialX) / NUMBER_CICLES;
         double translateY = (finalY - inicialY) / NUMBER_CICLES;
 

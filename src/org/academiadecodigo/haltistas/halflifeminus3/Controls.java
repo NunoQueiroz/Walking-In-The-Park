@@ -88,9 +88,6 @@ public class Controls implements KeyboardHandler, MouseHandler {
 
     }
 
-    public boolean isPressedKey() {
-        return pressedKey;
-    }
 
     @Override
     public void mouseClicked(MouseEvent mouseEvent) {
@@ -107,6 +104,13 @@ public class Controls implements KeyboardHandler, MouseHandler {
     public void mouseMoved(MouseEvent mouseEvent) {
 
     }
+
+
+    public boolean isPressedKey() {
+        return pressedKey;
+    }
+
+
     public void resetPressedKey() {
         pressedKey = false;
     }

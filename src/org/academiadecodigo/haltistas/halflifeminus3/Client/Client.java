@@ -57,6 +57,8 @@ public class Client {
 
                 }
 
+                player.bulletsMove();
+
             }
 
         } catch (IOException e) {
