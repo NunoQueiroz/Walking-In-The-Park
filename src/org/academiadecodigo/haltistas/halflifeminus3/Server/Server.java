@@ -1,5 +1,8 @@
 package org.academiadecodigo.haltistas.halflifeminus3.Server;
 
+import org.academiadecodigo.haltistas.halflifeminus3.Client.Bullet;
+import org.academiadecodigo.haltistas.halflifeminus3.Client.Player;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -13,10 +16,14 @@ public class Server {
     private final int portNumber;
     private List<ClientHandler> clientHandlers;
     private ServerSocket serverSocket = null;
+    private List<Player> playerList;
+    private List<Bullet> bulletList;
 
     public Server(int portNumber) {
         this.portNumber = portNumber;
         this.clientHandlers = new LinkedList<>();
+        playerList = new LinkedList<>();
+        bulletList = new LinkedList<>();
     }
 
     public void start() {
@@ -61,4 +68,13 @@ public class Server {
 
     }
 
+    public List<Player> getPlayerList(){
+
+        return playerList;
+
+    }
+
+    public List<Bullet> getBulletList() {
+        return bulletList;
+    }
 }

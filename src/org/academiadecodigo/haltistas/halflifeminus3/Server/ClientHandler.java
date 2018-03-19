@@ -14,11 +14,14 @@ public class ClientHandler implements Runnable {
     private Socket clientConnection;
     private PrintWriter printWriter;
     private BufferedReader bufferedReader;
+    private EventCoordinator eventCoordinator;
+
 
     public ClientHandler(Server server, Socket socket) {
 
         this.server = server;
-        clientConnection = socket;
+        this.clientConnection = socket;
+        this.eventCoordinator = new EventCoordinator(server, this);
 
     }
 
@@ -33,6 +36,7 @@ public class ClientHandler implements Runnable {
             while (true) {
 
                 String message = bufferedReader.readLine();
+                eventCoordinator.events();
                 System.out.println(message);
                 server.broadcast(message, this);
 

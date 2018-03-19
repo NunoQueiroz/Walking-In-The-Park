@@ -156,4 +156,26 @@ public class Player {
         picture.draw();
     }
 
+
+    public int colToX() {
+        return logicalCol * Grid.CELLSIZE + Grid.PADDING;
+    }
+
+    public int rowToY() {
+        return logicalRow * Grid.CELLSIZE + Grid.PADDING;
+    }
+
+    public int playerWidth() {
+
+        return (logicalCol + 2) * Grid.CELLSIZE + Grid.PADDING;
+
+    }
+
+    public int playerHeigth() {
+
+        return (logicalRow + 2) * Grid.CELLSIZE + Grid.PADDING;
+
+    }
+
+
 }
