@@ -21,7 +21,6 @@ public class Player {
     public Player() {
 
 
-
     }
 
     public void init(int colP, int rowP) {
@@ -34,6 +33,22 @@ public class Player {
 
         picture.draw();
         this.logicalCol = col;
+        this.logicalRow = row;
+    }
+
+    public void initEnemyPlayer() {
+
+        int initialCol = logicalCol * Grid.CELLSIZE + Grid.PADDING;
+        int initialRow = logicalRow * Grid.CELLSIZE + Grid.PADDING;
+        this.picture = new Picture(initialCol, initialRow, "assets/player_sprite3.png");
+    }
+
+
+    public void setEnemyCol(int col) {
+        this.logicalCol = col;
+    }
+
+    public void setEnemyRow(int row) {
         this.logicalRow = row;
     }
 
@@ -128,8 +143,16 @@ public class Player {
         }
     }
 
-    public void debug () {
+    public void debug() {
         picture.delete();
+        picture.draw();
+    }
+
+    public void delete() {
+        picture.delete();
+    }
+
+    public void draw() {
         picture.draw();
     }
 

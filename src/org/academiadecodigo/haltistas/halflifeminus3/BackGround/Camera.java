@@ -41,7 +41,6 @@ public class Camera {
 
     public void moveRight() {
 
-        System.out.println(backCol + "C");
 
         if (backCol + CAMERA_WIDTH >= Grid.MAX_COL) {
             return;
@@ -63,7 +62,6 @@ public class Camera {
 
     public void moveLeft() {
 
-        System.out.println(backCol + "C");
 
         if (backCol <= 0) {
             return;
@@ -83,7 +81,6 @@ public class Camera {
     }
 
     public void moveUp() {
-        System.out.println(topRow + "R");
         if (topRow <= 0) {
             return;
 
@@ -103,7 +100,6 @@ public class Camera {
 
 
     public void moveDown() {
-        System.out.println(topRow + "R");
         if (topRow + CAMERA_HEIGHT >= Grid.MAX_ROW) {
             return;
 
@@ -123,4 +119,13 @@ public class Camera {
     public Player getPlayer() {
         return player;
     }
+
+    public boolean isInView(Player enemy) {
+
+        return (backCol + 1 < enemy.getLogicalCol() && backCol + CAMERA_WIDTH - 1 > enemy.getLogicalCol()
+                && topRow + 1 < enemy.getLogicalRow() && topRow + CAMERA_HEIGHT - 1 > enemy.getLogicalRow());
+
+    }
+
+
 }
