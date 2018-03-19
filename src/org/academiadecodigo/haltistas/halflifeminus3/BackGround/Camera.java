@@ -116,7 +116,7 @@ public class Camera {
         topRow++;
     }
 
-    public Player getPlayer() {
+    public Player getPlayer () {
         return player;
     }
 
