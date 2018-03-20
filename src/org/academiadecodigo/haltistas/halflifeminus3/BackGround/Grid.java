@@ -24,6 +24,7 @@ public class Grid {
         }
         createTrees();
         createFrame();
+        createPuddle();
     }
 
     public void createFrame() {
@@ -65,6 +66,24 @@ public class Grid {
             }
 
         }
+    }
+
+    public void createPuddle() {
+
+        for (int col = MAX_COL/2 - 2; col < MAX_COL/2 + 2; col++) {
+            for (int row = MAX_ROW/2 - 10; row < MAX_ROW/2 + 9; row++) {
+
+                if((row > MAX_ROW/2 - 8 && row < MAX_ROW/2 - 4) ||
+                        (row > MAX_ROW/2 + 2 && row < MAX_ROW/2 + 6)){
+                    continue;
+                }
+
+                grid[col][row] = new UncollidableBackground(col,row, "assets/water_tile.png");
+            }
+
+        }
+
+
     }
 
     public GameBackground[][] getGrid() {
