@@ -50,8 +50,24 @@ public class Client {
                     int col = player.getLogicalCol();
                     int row = player.getLogicalRow();
                     String message = PlayerCommandList.player(0, col, row);
+
+
+                    if (controls.shooted()) {
+                        System.out.println("mandou mensagem");
+                        double initialX = player.getLogicalCol();
+                        double initialY = player.getLogicalRow();
+                        double finalX = controls.getFinalX();
+                        double finalY = controls.getFinalY();
+                        String bulletMessage = PlayerCommandList.bullet(initialX, initialY, finalX, finalY);
+                        printWriter.println(bulletMessage);
+
+                        controls.resetShooted();
+                    }
+
+
                     System.out.println(message);
                     printWriter.println(message);
+
 
                     controls.resetPressedKey();
 
@@ -63,7 +79,7 @@ public class Client {
 
         } catch (IOException e) {
             e.printStackTrace();
-        }catch (InterruptedException e) {
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
@@ -108,7 +124,13 @@ public class Client {
 
     public void moveEnemy(String message) {
 
+        if (message.charAt(0) != 'M') {
+            return;
+        }
+
+
         String[] enemyPlayerData = message.split(" +");
+
 
         int playerNum = Integer.parseInt(enemyPlayerData[1]);
         System.out.println(playerNum);
@@ -125,8 +147,8 @@ public class Client {
             System.out.println("new player added");
             playerList.put(playerNum, new Player());
             enemy = playerList.get(playerNum);
-            enemy.setEnemyCol(newCol);
-            enemy.setEnemyRow(newRow);
+            enemy.setPlayerCol(newCol);
+            enemy.setPlayerRow(newRow);
             enemy.initEnemyPlayer();
             return;
         }
@@ -140,8 +162,8 @@ public class Client {
 
         enemy.move(translateX, translateY);
 
-        enemy.setEnemyCol(newCol);
-        enemy.setEnemyRow(newRow);
+        enemy.setPlayerCol(newCol);
+        enemy.setPlayerRow(newRow);
 
         if (!camera.isInView(enemy)) {
             enemy.delete();

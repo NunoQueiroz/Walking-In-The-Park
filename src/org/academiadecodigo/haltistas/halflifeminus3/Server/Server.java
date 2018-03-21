@@ -45,7 +45,7 @@ public class Server {
 
                 clientHandlers.add(clientHandler);
 
-                cachedPool.submit(clientHandler);
+                cachedPool.execute(clientHandler);
 
             }
 

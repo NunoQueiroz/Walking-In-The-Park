@@ -14,11 +14,15 @@ public class Controls implements KeyboardHandler, MouseHandler {
 
     private Camera camera;
     private volatile boolean pressedKey;
+    private volatile boolean shooted;
+    private double finalX;
+    private double finalY;
 
     public Controls(Camera camera) {
 
         this.camera = camera;
         this.pressedKey = false;
+        this.shooted = false;
 
     }
 
@@ -92,11 +96,13 @@ public class Controls implements KeyboardHandler, MouseHandler {
     @Override
     public void mouseClicked(MouseEvent mouseEvent) {
 
-        double finalX = mouseEvent.getX();
-        double finalY = mouseEvent.getY();
 
-        camera.getPlayer().shoot(finalX, finalY);
+        finalX = mouseEvent.getX();
+        finalY = mouseEvent.getY();
         pressedKey = true;
+        shooted = true;
+        camera.getPlayer().shoot(finalX, finalY);
+
 
     }
 
@@ -117,4 +123,19 @@ public class Controls implements KeyboardHandler, MouseHandler {
         pressedKey = false;
     }
 
+    public boolean shooted() {
+        return shooted;
+    }
+
+    public void resetShooted() {
+        shooted = false;
+    }
+
+    public double getFinalX() {
+        return finalX;
+    }
+
+    public double getFinalY() {
+        return finalY;
+    }
 }

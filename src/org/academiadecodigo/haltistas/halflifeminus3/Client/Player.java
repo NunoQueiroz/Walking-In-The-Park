@@ -46,11 +46,11 @@ public class Player {
     }
 
 
-    public void setEnemyCol(int col) {
+    public void setPlayerCol(int col) {
         this.logicalCol = col;
     }
 
-    public void setEnemyRow(int row) {
+    public void setPlayerRow(int row) {
         this.logicalRow = row;
     }
 
@@ -135,7 +135,6 @@ public class Player {
         for (int i = 0; i < MAX_BULLETS; i++) {
 
             if (bulletsList[i] == null) {
-                System.out.println("fez uma bullet");
                 bulletsList[i] = new Bullet(inicialX, inicialY, finalX, finalY);
                 break;
             }
@@ -172,10 +171,7 @@ public class Player {
         double bulletX = bulletsList[index].getX();
         double bulletY = bulletsList[index].getY();
 
-        System.out.println("r" + right + "l" + left + "t" + top + "b" + bottom);
-
         return left < bulletX && right > bulletX && top < bulletY && bottom > bulletY;
-
     }
 
     public void debug() {

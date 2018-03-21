@@ -35,17 +35,21 @@ public class EventCoordinator {
         @Override
         public void run() {
 
+            int playerNum = 0;
             for (Player player : server.getPlayerList()) {
                 for (Bullet bullet : server.getBulletList()) {
+
+                    bullet.move();
 
                     if ((player.colToX() <= bullet.getX() && player.playerWidth() >= bullet.getX())
                             && player.rowToY() <= bullet.getY() && player.playerHeigth() >= bullet.getY()) {
 
-                        server.broadcast("hit", clientHandler);
+                        server.broadcast(playerNum + " hit", clientHandler);
 
                     }
 
                 }
+                playerNum++;
             }
 
         }

@@ -11,18 +11,18 @@ public class Bullet {
     private static final int NUMBER_CICLES = 20;
     private Picture picture;
 
-    public Bullet (double initialX, double initialY, double finalX, double finalY) {
-        this.inicialX =  initialX;
+    public Bullet(double initialX, double initialY, double finalX, double finalY) {
+        this.inicialX = initialX;
         this.inicialY = initialY;
         this.finalX = finalX;
         this.finalY = finalY;
-        this.picture = new Picture( initialX, initialY, "assets/bullet.png");
-        picture.draw();
+        this.picture = new Picture(initialX, initialY, "assets/bullet.png");
+
     }
 
-    public void move () {
+    public void move() {
 
-
+        picture.draw();
         double translateX = (finalX - inicialX) / NUMBER_CICLES;
         double translateY = (finalY - inicialY) / NUMBER_CICLES;
 
@@ -30,11 +30,11 @@ public class Bullet {
 
     }
 
-    public double getX () {
+    public double getX() {
         return picture.getX();
     }
 
-    public double getY () {
+    public double getY() {
         return picture.getY();
     }
 
@@ -46,11 +46,11 @@ public class Bullet {
         return finalY;
     }
 
-    public void delete () {
+    public void delete() {
         picture.delete();
     }
 
-    public void draw () {
+    public void draw() {
         picture.draw();
     }
 }
