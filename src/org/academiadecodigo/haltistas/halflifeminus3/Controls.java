@@ -103,6 +103,8 @@ public class Controls implements KeyboardHandler, MouseHandler {
     @Override
     public void mouseMoved(MouseEvent mouseEvent) {
 
+        //System.out.println("x"+mouseEvent.getX()+"y"+mouseEvent.getY());
+
     }
 
 

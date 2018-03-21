@@ -38,4 +38,19 @@ public class Bullet {
         return picture.getY();
     }
 
+    public double getFinalX() {
+        return finalX;
+    }
+
+    public double getFinalY() {
+        return finalY;
+    }
+
+    public void delete () {
+        picture.delete();
+    }
+
+    public void draw () {
+        picture.draw();
+    }
 }

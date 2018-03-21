@@ -16,7 +16,8 @@ public class Player {
 
     private Picture picture;
     private LinkedList<Bullet> bullets;
-    private static final int MAX_BULLETS = 15;
+    private static final int MAX_BULLETS = 5;
+    private Bullet[] bulletsList;
 
     public Player() {
 
@@ -30,6 +31,7 @@ public class Player {
         this.picture = new Picture(col * Grid.CELLSIZE + Grid.PADDING,
                 row * Grid.CELLSIZE + Grid.PADDING, "assets/player_sprite3.png");
         this.bullets = new LinkedList<>();
+        this.bulletsList = new Bullet[MAX_BULLETS];
 
         picture.draw();
         this.logicalCol = col;
@@ -126,22 +128,54 @@ public class Player {
 
     public void shoot(double finalX, double finalY) {
 
-        if (bullets.size() >= MAX_BULLETS) {
-            return;
-        }
 
         double inicialX = (col + 1) * Grid.CELLSIZE;
         double inicialY = (row + 1) * Grid.CELLSIZE;
 
-        bullets.add(new Bullet(inicialX, inicialY, finalX, finalY));
+        for (int i = 0; i < MAX_BULLETS; i++) {
+
+            if (bulletsList[i] == null) {
+                System.out.println("fez uma bullet");
+                bulletsList[i] = new Bullet(inicialX, inicialY, finalX, finalY);
+                break;
+            }
+        }
+
 
     }
 
-    public void bulletsMove() {
+    public void bulletsMove() throws InterruptedException {
 
-        for (int i = 0; i < bullets.size(); i++) {
-            bullets.get(i).move();
+        if (bulletsList[0] == null) {
+            return;
         }
+
+
+        for (int i = 0; i < 1; i++) {
+            Thread.sleep(30);
+            bulletsList[i].move();
+
+            if (!bulletInView(i)) {
+                bulletsList[i].delete();
+                bulletsList[i] = null;
+            }
+
+        }
+    }
+
+    public boolean bulletInView(int index) {
+
+        int right = (col + Camera.CAMERA_WIDTH / 2) * Grid.CELLSIZE + Grid.PADDING;
+        int left = Grid.PADDING;
+        int top = Grid.PADDING;
+        int bottom = (row + Camera.CAMERA_HEIGHT / 2) * Grid.CELLSIZE + Grid.PADDING;
+        double bulletX = bulletsList[index].getX();
+        double bulletY = bulletsList[index].getY();
+
+        System.out.println("r" + right + "l" + left + "t" + top + "b" + bottom);
+
+        return left < bulletX && right > bulletX && top < bulletY && bottom > bulletY;
+
     }
 
     public void debug() {
