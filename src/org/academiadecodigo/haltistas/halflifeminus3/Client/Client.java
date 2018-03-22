@@ -54,28 +54,23 @@ public class Client {
                     int col = player.getLogicalCol();
                     int row = player.getLogicalRow();
                     String message = PlayerCommandList.player(0, col, row);
-
-
-                    if (controls.shooted()) {
-                        System.out.println("mandou mensagem");
-                        double initialX = player.getLogicalCol() * Grid.CELLSIZE + Grid.PADDING;
-                        double initialY = player.getLogicalRow() * Grid.CELLSIZE + Grid.PADDING;
-                        double finalX = controls.getFinalX();
-                        double finalY = controls.getFinalY();
-                        String bulletMessage = PlayerCommandList.bullet(initialX, initialY, finalX, finalY);
-                        printWriter.println(bulletMessage);
-
-                        controls.resetShooted();
-                    }
-
-
                     System.out.println(message);
                     printWriter.println(message);
-
-
                     controls.resetPressedKey();
-
                 }
+
+                if (controls.shooted()) {
+                    //  System.out.println("mandou mensagem");
+                    double initialX = player.getLogicalCol() * Grid.CELLSIZE + Grid.PADDING;
+                    double initialY = player.getLogicalRow() * Grid.CELLSIZE + Grid.PADDING;
+                    double finalX = controls.getFinalX();
+                    double finalY = controls.getFinalY();
+                    String bulletMessage = PlayerCommandList.bullet(initialX, initialY, finalX, finalY);
+                    printWriter.println(bulletMessage);
+
+                    controls.resetShooted();
+                }
+
 
                 player.bulletsMove();
                 drawBullet();
@@ -105,9 +100,8 @@ public class Client {
                 while (true) {
 
                     String message = bufferedReader.readLine();
-                    addBullet(message);
                     moveEnemy(message);
-                    System.out.println(message);
+                    addBullet(message);
 
                 }
 
@@ -132,16 +126,22 @@ public class Client {
     public void drawBullet() {
 
         synchronized (bulletList) {
-            try {
-                Thread.sleep(30);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+
             for (int i = 0; i < bulletList.size(); i++) {
 
                 if (camera.bulletIsInView(bulletList.get(i))) {
+                    try {
+                        Thread.sleep(30);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     bulletList.get(i).draw();
                     bulletList.get(i).move();
+
+                    if (collisionDetector(player, bulletList.get(i))) {
+
+                        System.out.println("hit");
+                    }
 
                 } else {
                     bulletList.get(i).delete();
@@ -150,6 +150,14 @@ public class Client {
 
             }
         }
+    }
+
+    public boolean collisionDetector(Player player, Bullet bullet) {
+
+        return (player.colToX() <= bullet.getX() && player.playerWidth() >= bullet.getX())
+                && (player.rowToY() <= bullet.getY() && player.playerHeight() >= bullet.getY());
+
+
     }
 
     private void addBullet(String bulletMessage) {
@@ -176,52 +184,47 @@ public class Client {
 
     private void moveEnemy(String message) {
 
-        if (message.charAt(0) != 'M') {
+        String[] enemyPlayerData = message.split(" ");
+
+        if (!enemyPlayerData[0].equals("M")) {
             return;
         }
 
+        synchronized (playerList) {
 
-        String[] enemyPlayerData = message.split(" +");
-
-
-        int playerNum = Integer.parseInt(enemyPlayerData[1]);
-        System.out.println(playerNum);
-        int newCol = Integer.parseInt(enemyPlayerData[2]);
-        System.out.println(newCol);
-        int newRow = Integer.parseInt(enemyPlayerData[3]);
-        System.out.println(newRow);
+            int playerNum = Integer.parseInt(enemyPlayerData[1]);
+            int newCol = Integer.parseInt(enemyPlayerData[2]);
+            int newRow = Integer.parseInt(enemyPlayerData[3]);
 
 
-        Player enemy = playerList.get(playerNum);
+            Player enemy = playerList.get(playerNum);
+
+            if (enemy == null) {
+                playerList.put(playerNum, new Player());
+                enemy = playerList.get(playerNum);
+                enemy.initEnemyPlayer(newCol, newRow);
+
+            }
+
+            int lastCol = enemy.getLogicalCol();
+            int lastRow = enemy.getLogicalRow();
+
+            int translateX = newCol - lastCol;
+            int translateY = newRow - lastRow;
+
+            enemy.move(translateX, translateY);
+
+            enemy.setPlayerCol(newCol);
+            enemy.setPlayerRow(newRow);
 
 
-        if (enemy == null) {
-            System.out.println("new player added");
-            playerList.put(playerNum, new Player());
-            enemy = playerList.get(playerNum);
-            enemy.initEnemyPlayer(newCol, newRow);
-            return;
+            if (!camera.isInView(enemy)) {
+                enemy.delete();
+            } else {
+                enemy.draw();
+            }
+
         }
-
-
-        int lastCol = enemy.getLogicalCol();
-        int lastRow = enemy.getLogicalRow();
-
-        int translateX = newCol - lastCol;
-        int translateY = newRow - lastRow;
-
-        enemy.move(translateX, translateY);
-
-        enemy.setPlayerCol(newCol);
-        enemy.setPlayerRow(newRow);
-
-        if (!camera.isInView(enemy)) {
-            enemy.delete();
-        } else {
-            enemy.draw();
-        }
-
     }
-
 
 }

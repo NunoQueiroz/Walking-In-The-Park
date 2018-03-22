@@ -139,6 +139,7 @@ public class Camera {
 
     public boolean isInView(Player enemy) {
 
+
         return (backCol + 1 < enemy.getLogicalCol() && backCol + CAMERA_WIDTH - 1 > enemy.getLogicalCol()
                 && topRow + 1 < enemy.getLogicalRow() && topRow + CAMERA_HEIGHT - 1 > enemy.getLogicalRow());
 

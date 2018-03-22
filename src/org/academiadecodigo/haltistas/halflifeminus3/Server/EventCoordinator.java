@@ -42,7 +42,7 @@ public class EventCoordinator {
                     bullet.move();
 
                     if ((player.colToX() <= bullet.getX() && player.playerWidth() >= bullet.getX())
-                            && player.rowToY() <= bullet.getY() && player.playerHeigth() >= bullet.getY()) {
+                            && player.rowToY() <= bullet.getY() && player.playerHeight() >= bullet.getY()) {
 
                         server.broadcast(playerNum + " hit", clientHandler);
 

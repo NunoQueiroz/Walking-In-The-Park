@@ -49,10 +49,6 @@ public class Bullet {
     public void move() {
 
         numberOfCicles();
-        System.out.println(numberCicles + " initx" + inicialX + " initY " + inicialY);
-
-        System.out.println(numberCicles + " Fx" + finalX + " FY " + finalY);
-
 
         double translateX = (finalX - inicialX) / numberCicles;
         double translateY = (finalY - inicialY) / numberCicles;

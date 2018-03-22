@@ -40,7 +40,7 @@ public class ClientHandler implements Runnable {
 
                 String message = bufferedReader.readLine();
 
-                System.out.println(message);
+              //  System.out.println(message);
 
                 stringDecoder(message);
                 //eventCoordinator.events();
