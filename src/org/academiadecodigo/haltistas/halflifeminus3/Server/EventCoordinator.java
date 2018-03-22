@@ -44,7 +44,7 @@ public class EventCoordinator {
                     if ((player.colToX() <= bullet.getX() && player.playerWidth() >= bullet.getX())
                             && player.rowToY() <= bullet.getY() && player.playerHeight() >= bullet.getY()) {
 
-                        server.broadcast(playerNum + " hit", clientHandler);
+                        server.broadcast(playerNum + " hit");
 
                     }
 

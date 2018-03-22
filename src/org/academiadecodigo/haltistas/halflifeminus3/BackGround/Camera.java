@@ -3,6 +3,9 @@ package org.academiadecodigo.haltistas.halflifeminus3.BackGround;
 import org.academiadecodigo.haltistas.halflifeminus3.Client.Bullet;
 import org.academiadecodigo.haltistas.halflifeminus3.Client.Player;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class Camera {
 
     public static final int CAMERA_WIDTH = 24;
@@ -19,13 +22,15 @@ public class Camera {
         this.topRow = topRow;
         this.grid = grid;
         this.player = player;
-
     }
 
     public void init() {
 
         int colP = (backCol + Camera.CAMERA_WIDTH) / 2 - 1;
         int rowP = (topRow + Camera.CAMERA_HEIGHT) / 2 - 1;
+
+        System.out.println(colP);
+        System.out.println(rowP);
 
         grid.translateGrid(-backCol, -topRow);
 
@@ -107,6 +112,7 @@ public class Camera {
 
         player.debug();
         topRow--;
+
     }
 
 
@@ -139,9 +145,8 @@ public class Camera {
 
     public boolean isInView(Player enemy) {
 
-
-        return (backCol + 1 < enemy.getLogicalCol() && backCol + CAMERA_WIDTH - 1 > enemy.getLogicalCol()
-                && topRow + 1 < enemy.getLogicalRow() && topRow + CAMERA_HEIGHT - 1 > enemy.getLogicalRow());
+        return (backCol < enemy.getLogicalCol() && backCol + CAMERA_WIDTH - 1 > enemy.getLogicalCol()
+                && topRow < enemy.getLogicalRow() && topRow + CAMERA_HEIGHT - 1 > enemy.getLogicalRow());
 
     }
 
@@ -155,5 +160,21 @@ public class Camera {
 
         return (backColToX < bullet.getX() && fronColToX > bullet.getX()
                 && topRowToY < bullet.getY() && botRowToY > bullet.getY());
+    }
+
+    public void addEnemie(Player enemie) {
+        grid.addEnemie(enemie);
+    }
+
+    public void showEnemiesInView() {
+
+        for (Player enemy : grid.getEnemies()) {
+            if (isInView(enemy)) {
+                enemy.debug();
+            }
+            else {
+                enemy.delete();
+            }
+        }
     }
 }

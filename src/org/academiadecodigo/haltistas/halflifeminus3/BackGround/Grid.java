@@ -1,7 +1,11 @@
 package org.academiadecodigo.haltistas.halflifeminus3.BackGround;
 
 import javafx.scene.layout.Background;
+import org.academiadecodigo.haltistas.halflifeminus3.Client.Player;
 import org.academiadecodigo.simplegraphics.pictures.Picture;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class Grid {
 
@@ -12,10 +16,11 @@ public class Grid {
     public static final int MAX_ROW = 50;
 
     private GameBackground[][] grid;
+    private List<Player> enemies;
 
     public Grid() {
         grid = new GameBackground[MAX_COL][MAX_ROW];
-
+        enemies = new LinkedList<>();
     }
 
     public void init() {
@@ -138,8 +143,18 @@ public class Grid {
                 grid[col][row].translateTile(x * CELLSIZE, y * CELLSIZE);
 
             }
-
         }
 
+        for (Player enemy : enemies) {
+            enemy.move(x, y);
+        }
+    }
+
+    public void addEnemie(Player enemie) {
+        enemies.add(enemie);
+    }
+
+    public List<Player> getEnemies() {
+        return enemies;
     }
 }

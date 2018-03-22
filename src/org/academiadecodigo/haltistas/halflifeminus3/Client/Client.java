@@ -25,6 +25,7 @@ public class Client {
     private Map<Integer, Player> playerList;
     private List<Bullet> bulletList;
     private Camera camera;
+    private int id;
 
     public Client(String hostName, int portNumber, Player player, Controls controls, Camera camera) {
 
@@ -53,7 +54,7 @@ public class Client {
 
                     int col = player.getLogicalCol();
                     int row = player.getLogicalRow();
-                    String message = PlayerCommandList.player(0, col, row);
+                    String message = PlayerCommandList.player(id, col, row);
                     System.out.println(message);
                     printWriter.println(message);
                     controls.resetPressedKey();
@@ -65,7 +66,7 @@ public class Client {
                     double initialY = player.getLogicalRow() * Grid.CELLSIZE + Grid.PADDING;
                     double finalX = controls.getFinalX();
                     double finalY = controls.getFinalY();
-                    String bulletMessage = PlayerCommandList.bullet(initialX, initialY, finalX, finalY);
+                    String bulletMessage = PlayerCommandList.bullet(id, initialX, initialY, finalX, finalY);
                     printWriter.println(bulletMessage);
 
                     controls.resetShooted();
@@ -100,6 +101,13 @@ public class Client {
                 while (true) {
 
                     String message = bufferedReader.readLine();
+
+                    String[] event = message.split(" ");
+
+                    if (event[0].equals("YOUARENUMBER")) {
+                        id = Integer.parseInt(event[1]);
+                    }
+
                     moveEnemy(message);
                     addBullet(message);
 
@@ -130,11 +138,15 @@ public class Client {
             for (int i = 0; i < bulletList.size(); i++) {
 
                 if (camera.bulletIsInView(bulletList.get(i))) {
+
+                    System.out.println("Bullet at: " + bulletList.get(i).getX() + " " + bulletList.get(i).getY());
+
                     try {
                         Thread.sleep(30);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
+                    System.out.println("desenhou uma bala inimiga");
                     bulletList.get(i).draw();
                     bulletList.get(i).move();
 
@@ -142,7 +154,6 @@ public class Client {
 
                         System.out.println("hit");
                     }
-
                 } else {
                     bulletList.get(i).delete();
                     bulletList.remove(i);
@@ -166,17 +177,19 @@ public class Client {
 
             String[] bulletData = bulletMessage.split(" ");
 
-            if (!bulletData[0].equals("B")) {
+
+            if (!bulletData[0].equals("B") || Integer.parseInt(bulletData[1]) == id) {
                 return;
             }
 
 
-            double initialX = Double.parseDouble(bulletData[1]);
-            double initialY = Double.parseDouble(bulletData[2]);
-            double finalX = Double.parseDouble(bulletData[3]);
-            double finalY = Double.parseDouble(bulletData[4]);
+            double initialX = Double.parseDouble(bulletData[2]);
+            double initialY = Double.parseDouble(bulletData[3]);
+            double finalX = Double.parseDouble(bulletData[4]);
+            double finalY = Double.parseDouble(bulletData[5]);
 
             Bullet bullet = new Bullet(initialX, initialY, finalX, finalY);
+            System.out.println("adicionou uma bala inimiga");
             bulletList.add(bullet);
             bullet.bulletInit();
         }
@@ -193,9 +206,14 @@ public class Client {
         synchronized (playerList) {
 
             int playerNum = Integer.parseInt(enemyPlayerData[1]);
+            System.out.println("I am id" + id);
+            System.out.println("Enemy is id " + playerNum);
             int newCol = Integer.parseInt(enemyPlayerData[2]);
             int newRow = Integer.parseInt(enemyPlayerData[3]);
 
+            if (playerNum == id) {
+                return;
+            }
 
             Player enemy = playerList.get(playerNum);
 
@@ -204,6 +222,7 @@ public class Client {
                 enemy = playerList.get(playerNum);
                 enemy.initEnemyPlayer(newCol, newRow);
 
+                camera.addEnemie(enemy);
             }
 
             int lastCol = enemy.getLogicalCol();
@@ -221,7 +240,7 @@ public class Client {
             if (!camera.isInView(enemy)) {
                 enemy.delete();
             } else {
-                enemy.draw();
+                enemy.debug();
             }
 
         }

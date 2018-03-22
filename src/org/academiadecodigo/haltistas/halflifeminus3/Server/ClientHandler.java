@@ -1,6 +1,5 @@
 package org.academiadecodigo.haltistas.halflifeminus3.Server;
 
-import com.oracle.xmlns.internal.webservices.jaxws_databinding.SoapBindingParameterStyle;
 import org.academiadecodigo.haltistas.halflifeminus3.Client.Bullet;
 import org.academiadecodigo.haltistas.halflifeminus3.Client.Player;
 
@@ -19,12 +18,14 @@ public class ClientHandler implements Runnable {
     private EventCoordinator eventCoordinator;
 
 
-    public ClientHandler(Server server, Socket socket) {
+    public ClientHandler(Server server, Socket socket) throws IOException {
 
         server.getPlayerList().add(new Player());
         this.server = server;
         this.clientConnection = socket;
         this.eventCoordinator = new EventCoordinator(server, this);
+
+        printWriter = new PrintWriter(clientConnection.getOutputStream(), true);
 
     }
 
@@ -34,18 +35,17 @@ public class ClientHandler implements Runnable {
         try {
 
             bufferedReader = new BufferedReader(new InputStreamReader(clientConnection.getInputStream()));
-            printWriter = new PrintWriter(clientConnection.getOutputStream(), true);
 
             while (true) {
 
                 String message = bufferedReader.readLine();
 
-              //  System.out.println(message);
+                //  System.out.println(message);
 
                 stringDecoder(message);
                 //eventCoordinator.events();
                 System.out.println(message);
-                server.broadcast(message, this);
+                server.broadcast(message);
 
             }
 

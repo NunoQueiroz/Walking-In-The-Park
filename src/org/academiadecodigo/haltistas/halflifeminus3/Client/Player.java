@@ -119,6 +119,7 @@ public class Player {
 
     public void move(int colMove, int rowMove) {
 
+        System.out.println("MOVING");
         picture.translate(colMove * Grid.CELLSIZE, rowMove * Grid.CELLSIZE);
     }
 
@@ -207,5 +208,6 @@ public class Player {
         return (logicalRow + 2) * Grid.CELLSIZE + Grid.PADDING;
 
     }
+
 
 }

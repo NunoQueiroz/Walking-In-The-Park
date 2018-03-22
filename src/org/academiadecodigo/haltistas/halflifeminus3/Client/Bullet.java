@@ -1,5 +1,6 @@
 package org.academiadecodigo.haltistas.halflifeminus3.Client;
 
+import org.academiadecodigo.haltistas.halflifeminus3.BackGround.Grid;
 import org.academiadecodigo.simplegraphics.pictures.Picture;
 
 public class Bullet {
@@ -31,7 +32,7 @@ public class Bullet {
         }
 
         if (finalX < inicialX + 200 && finalX > inicialX - 200 && finalY < finalY + 200 && finalY > finalY - 200) {
-            return numberCicles = 5;
+            return numberCicles = 6;
         }
 
         if (finalX < inicialX + 300 && finalX > inicialX - 300 && finalY < finalY + 300 && finalY > finalY - 300) {
@@ -44,6 +45,43 @@ public class Bullet {
 
         return 0;
     }
+
+
+    private void translateBullet(BulletDirection bulletDirection){
+
+
+        switch (bulletDirection){
+
+
+            case SHOOT_UP:
+                picture.translate(0, -Grid.CELLSIZE );
+                break;
+
+            case SHOOT_DOWN:
+                picture.translate(0, Grid.CELLSIZE);
+                break;
+
+            case SHOOT_RIGHT:
+                picture.translate(Grid.CELLSIZE,0 );
+                break;
+
+            case SHOOT_LEFT:
+                picture.translate(-Grid.CELLSIZE,0 );
+                break;
+
+            default:
+                System.out.println("Error on the tranlator");
+                break;
+
+
+
+
+
+        }
+
+
+    }
+
 
 
     public void move() {

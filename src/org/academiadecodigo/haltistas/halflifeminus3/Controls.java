@@ -31,25 +31,24 @@ public class Controls implements KeyboardHandler, MouseHandler {
         Keyboard k = new Keyboard(this);
         Mouse m = new Mouse(this);
 
-        KeyboardEvent event = new KeyboardEvent();
-        event.setKey(KeyboardEvent.KEY_RIGHT);
-        event.setKeyboardEventType(KeyboardEventType.KEY_PRESSED);
-        k.addEventListener(event);
+        int[] keys = {
+                KeyboardEvent.KEY_RIGHT,
+                KeyboardEvent.KEY_DOWN,
+                KeyboardEvent.KEY_LEFT,
+                KeyboardEvent.KEY_UP,
+                KeyboardEvent.KEY_W,
+                KeyboardEvent.KEY_A,
+                KeyboardEvent.KEY_S,
+                KeyboardEvent.KEY_D,
+        };
 
-        KeyboardEvent event1 = new KeyboardEvent();
-        event1.setKey(KeyboardEvent.KEY_LEFT);
-        event1.setKeyboardEventType(KeyboardEventType.KEY_PRESSED);
-        k.addEventListener(event1);
+        for (int key : keys) {
 
-        KeyboardEvent event2 = new KeyboardEvent();
-        event2.setKey(KeyboardEvent.KEY_UP);
-        event2.setKeyboardEventType(KeyboardEventType.KEY_PRESSED);
-        k.addEventListener(event2);
-
-        KeyboardEvent event3 = new KeyboardEvent();
-        event3.setKey(KeyboardEvent.KEY_DOWN);
-        event3.setKeyboardEventType(KeyboardEventType.KEY_PRESSED);
-        k.addEventListener(event3);
+            KeyboardEvent event = new KeyboardEvent();
+            event.setKey(key);
+            event.setKeyboardEventType(KeyboardEventType.KEY_PRESSED);
+            k.addEventListener(event);
+        }
 
         m.addEventListener(MouseEventType.MOUSE_CLICKED);
         m.addEventListener(MouseEventType.MOUSE_MOVED);
@@ -61,21 +60,25 @@ public class Controls implements KeyboardHandler, MouseHandler {
 
         switch (keyboardEvent.getKey()) {
             case KeyboardEvent.KEY_RIGHT:
+            case KeyboardEvent.KEY_D:
                 camera.moveRight();
                 camera.getPlayer().playerMoveRight();
                 pressedKey = true;
                 break;
             case KeyboardEvent.KEY_LEFT:
+            case KeyboardEvent.KEY_A:
                 camera.moveLeft();
                 camera.getPlayer().playerMoveLeft();
                 pressedKey = true;
                 break;
             case KeyboardEvent.KEY_UP:
+            case KeyboardEvent.KEY_W:
                 camera.moveUp();
                 camera.getPlayer().playerMoveUp();
                 pressedKey = true;
                 break;
             case KeyboardEvent.KEY_DOWN:
+            case KeyboardEvent.KEY_S:
                 camera.moveDown();
                 camera.getPlayer().playerMoveDown();
                 pressedKey = true;
@@ -84,6 +87,8 @@ public class Controls implements KeyboardHandler, MouseHandler {
                 System.out.println("JVM");
                 break;
         }
+
+        camera.showEnemiesInView();
 
     }
 
@@ -109,7 +114,7 @@ public class Controls implements KeyboardHandler, MouseHandler {
     @Override
     public void mouseMoved(MouseEvent mouseEvent) {
 
-        //System.out.println("x"+mouseEvent.getX()+"y"+mouseEvent.getY());
+        System.out.println("x" + mouseEvent.getX() + "y" + mouseEvent.getY());
 
     }
 
