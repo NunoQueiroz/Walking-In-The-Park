@@ -8,7 +8,7 @@ public class Bullet {
     private double inicialY;
     private double finalX;
     private double finalY;
-    private static final int NUMBER_CICLES = 20;
+    private int numberCicles;
     private Picture picture;
 
     public Bullet(double initialX, double initialY, double finalX, double finalY) {
@@ -24,11 +24,38 @@ public class Bullet {
         picture = new Picture(inicialX, inicialY, "assets/bullet.png");
     }
 
+    public int numberOfCicles() {
+
+        if (finalX < inicialX + 100 && finalX > inicialX - 100 && finalY < finalY + 100 && finalY > finalY - 100) {
+            return numberCicles = 1;
+        }
+
+        if (finalX < inicialX + 200 && finalX > inicialX - 200 && finalY < finalY + 200 && finalY > finalY - 200) {
+            return numberCicles = 5;
+        }
+
+        if (finalX < inicialX + 300 && finalX > inicialX - 300 && finalY < finalY + 300 && finalY > finalY - 300) {
+            return numberCicles = 8;
+        }
+
+        if (finalX < inicialX + 400 && finalX > inicialX - 400 && finalY < finalY + 400 && finalY > finalY - 400) {
+            return numberCicles = 20;
+        }
+
+        return 0;
+    }
+
+
     public void move() {
 
+        numberOfCicles();
+        System.out.println(numberCicles + " initx" + inicialX + " initY " + inicialY);
 
-        double translateX = (finalX - inicialX) / NUMBER_CICLES;
-        double translateY = (finalY - inicialY) / NUMBER_CICLES;
+        System.out.println(numberCicles + " Fx" + finalX + " FY " + finalY);
+
+
+        double translateX = (finalX - inicialX) / numberCicles;
+        double translateY = (finalY - inicialY) / numberCicles;
 
         picture.translate(translateX, translateY);
 
