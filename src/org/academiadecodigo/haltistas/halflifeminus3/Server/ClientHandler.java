@@ -43,7 +43,7 @@ public class ClientHandler implements Runnable {
                 System.out.println(message);
 
                 stringDecoder(message);
-                eventCoordinator.events();
+                //eventCoordinator.events();
                 System.out.println(message);
                 server.broadcast(message, this);
 

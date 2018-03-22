@@ -141,9 +141,13 @@ public class Client {
 
                 if (camera.bulletIsInView(bulletList.get(i))) {
                     bulletList.get(i).draw();
+                    bulletList.get(i).move();
 
+                } else {
+                    bulletList.get(i).delete();
+                    bulletList.remove(i);
                 }
-                bulletList.get(i).move();
+
             }
         }
     }

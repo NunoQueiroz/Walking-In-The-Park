@@ -149,7 +149,7 @@ public class Camera {
         int backColToX = (backCol + 1) * Grid.CELLSIZE + Grid.PADDING;
         int fronColToX = (backCol + CAMERA_WIDTH - 1) * Grid.CELLSIZE + Grid.PADDING;
         int topRowToY = (topRow + 1) * Grid.CELLSIZE + Grid.PADDING;
-        int botRowToY = (topRowToY + CAMERA_HEIGHT - 1) * Grid.CELLSIZE + Grid.PADDING;
+        int botRowToY = (topRow + CAMERA_HEIGHT - 1) * Grid.CELLSIZE;
 
 
         return (backColToX < bullet.getX() && fronColToX > bullet.getX()
