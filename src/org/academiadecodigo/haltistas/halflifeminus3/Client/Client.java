@@ -22,15 +22,19 @@ public class Client {
     private Map<Integer, Player> playerList;
     private Camera camera;
 
-    public Client(String hostName, int portNumber, Player player, Controls controls, Camera camera) {
 
-        this.hostName = hostName;
+    public Client(int portNumber, Player player, Controls controls, Camera camera) {
+
         this.portNumber = portNumber;
         this.player = player;
         this.controls = controls;
         this.playerList = new HashMap<>();
         this.camera = camera;
 
+    }
+
+    public void setHostName(String hostName) {
+        this.hostName = hostName;
     }
 
     public void start() {
@@ -104,6 +108,7 @@ public class Client {
         }
     }
 
+    // 192.168.1.15
     public void moveEnemy(String message) {
 
         String[] enemyPlayerData = message.split(" +");

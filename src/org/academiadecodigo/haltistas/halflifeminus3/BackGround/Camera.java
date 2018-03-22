@@ -30,6 +30,7 @@ public class Camera {
 
         for (int col = backCol; col < backCol + CAMERA_WIDTH; col++) {
             for (int row = topRow; row < topRow + CAMERA_HEIGHT; row++) {
+                System.out.println("drawing " + col + " " + row);
                 grid.getGrid()[col][row].draw();
 
             }

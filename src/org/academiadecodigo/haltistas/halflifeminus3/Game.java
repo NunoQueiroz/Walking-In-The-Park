@@ -13,15 +13,18 @@ public class Game {
     private Client client;
     private Player player;
 
-    public Game() {
+
+
+    public Game(String ip) {
 
         player = new Player();
         grid = new Grid();
         camera = new Camera(0, 0, grid, player);
         controls = new Controls(camera);
-        client = new Client("localhost", 9000, player, controls, camera);
-
+        client = new Client(9000, player, controls, camera);
+        client.setHostName(ip);
     }
+
 
     public void start() {
 
@@ -30,6 +33,10 @@ public class Game {
         controls.init();
         client.start();
 
+
+
+
     }
+
 
 }
