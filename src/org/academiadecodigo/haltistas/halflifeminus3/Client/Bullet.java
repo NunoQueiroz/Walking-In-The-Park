@@ -16,13 +16,17 @@ public class Bullet {
         this.inicialY = initialY;
         this.finalX = finalX;
         this.finalY = finalY;
-        this.picture = new Picture(initialX, initialY, "assets/bullet.png");
 
+
+    }
+
+    public void bulletInit() {
+        picture = new Picture(inicialX, inicialY, "assets/bullet.png");
     }
 
     public void move() {
 
-        picture.draw();
+
         double translateX = (finalX - inicialX) / NUMBER_CICLES;
         double translateY = (finalY - inicialY) / NUMBER_CICLES;
 
@@ -52,5 +56,13 @@ public class Bullet {
 
     public void draw() {
         picture.draw();
+    }
+
+    public double iniTialX() {
+        return inicialX;
+    }
+
+    public double getInicialY() {
+        return inicialY;
     }
 }

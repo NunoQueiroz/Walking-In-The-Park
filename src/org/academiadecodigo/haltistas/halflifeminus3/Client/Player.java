@@ -15,7 +15,6 @@ public class Player {
     private int logicalRow;
 
     private Picture picture;
-    private LinkedList<Bullet> bullets;
     private static final int MAX_BULLETS = 5;
     private Bullet[] bulletsList;
 
@@ -30,7 +29,6 @@ public class Player {
 
         this.picture = new Picture(col * Grid.CELLSIZE + Grid.PADDING,
                 row * Grid.CELLSIZE + Grid.PADDING, "assets/player_sprite3.png");
-        this.bullets = new LinkedList<>();
         this.bulletsList = new Bullet[MAX_BULLETS];
 
         picture.draw();
@@ -38,11 +36,11 @@ public class Player {
         this.logicalRow = row;
     }
 
-    public void initEnemyPlayer() {
+    public void initEnemyPlayer(int initialCol, int initialRow) {
 
-        int initialCol = logicalCol * Grid.CELLSIZE + Grid.PADDING;
-        int initialRow = logicalRow * Grid.CELLSIZE + Grid.PADDING;
-        this.picture = new Picture(initialCol, initialRow, "assets/player_sprite3.png");
+        logicalCol = initialCol * Grid.CELLSIZE + Grid.PADDING;
+        logicalRow = initialRow * Grid.CELLSIZE + Grid.PADDING;
+        this.picture = new Picture(logicalCol, logicalRow, "assets/player_sprite3.png");
     }
 
 
@@ -136,7 +134,7 @@ public class Player {
 
             if (bulletsList[i] == null) {
                 bulletsList[i] = new Bullet(inicialX, inicialY, finalX, finalY);
-                break;
+                bulletsList[i].bulletInit();
             }
         }
 
@@ -145,6 +143,7 @@ public class Player {
 
     public void bulletsMove() throws InterruptedException {
 
+
         if (bulletsList[0] == null) {
             return;
         }
@@ -152,6 +151,8 @@ public class Player {
 
         for (int i = 0; i < 1; i++) {
             Thread.sleep(30);
+
+            bulletsList[i].draw();
             bulletsList[i].move();
 
             if (!bulletInView(i)) {

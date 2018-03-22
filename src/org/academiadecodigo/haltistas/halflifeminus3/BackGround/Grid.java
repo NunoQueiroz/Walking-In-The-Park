@@ -60,7 +60,7 @@ public class Grid {
                         (row > inicialRowTrees && row < MAX_ROW - finalRowFTrees)) {
                     continue;
                 }
-                grid[col][row] = new UncollidableBackground(col, row, "assets/tree1.png");
+                grid[col][row] = new UncollidableBackground(col, row, "assets/tree.png");
 
             }
 

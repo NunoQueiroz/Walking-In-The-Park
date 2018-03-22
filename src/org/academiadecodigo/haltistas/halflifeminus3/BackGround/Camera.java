@@ -1,5 +1,6 @@
 package org.academiadecodigo.haltistas.halflifeminus3.BackGround;
 
+import org.academiadecodigo.haltistas.halflifeminus3.Client.Bullet;
 import org.academiadecodigo.haltistas.halflifeminus3.Client.Player;
 
 public class Camera {
@@ -144,4 +145,14 @@ public class Camera {
     }
 
 
+    public boolean bulletIsInView(Bullet bullet) {
+        int backColToX = (backCol + 1) * Grid.CELLSIZE + Grid.PADDING;
+        int fronColToX = (backCol + CAMERA_WIDTH - 1) * Grid.CELLSIZE + Grid.PADDING;
+        int topRowToY = (topRow + 1) * Grid.CELLSIZE + Grid.PADDING;
+        int botRowToY = (topRowToY + CAMERA_HEIGHT - 1) * Grid.CELLSIZE + Grid.PADDING;
+
+
+        return (backColToX < bullet.getX() && fronColToX > bullet.getX()
+                && topRowToY < bullet.getY() && botRowToY > bullet.getY());
+    }
 }

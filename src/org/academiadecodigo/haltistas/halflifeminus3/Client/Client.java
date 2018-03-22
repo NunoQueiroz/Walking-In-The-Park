@@ -1,6 +1,7 @@
 package org.academiadecodigo.haltistas.halflifeminus3.Client;
 
 import org.academiadecodigo.haltistas.halflifeminus3.BackGround.Camera;
+import org.academiadecodigo.haltistas.halflifeminus3.BackGround.Grid;
 import org.academiadecodigo.haltistas.halflifeminus3.Controls;
 
 import java.io.BufferedReader;
@@ -9,6 +10,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 public class Client {
@@ -20,6 +23,7 @@ public class Client {
     private Player player;
     private Controls controls;
     private Map<Integer, Player> playerList;
+    private List<Bullet> bulletList;
     private Camera camera;
 
     public Client(String hostName, int portNumber, Player player, Controls controls, Camera camera) {
@@ -29,6 +33,7 @@ public class Client {
         this.player = player;
         this.controls = controls;
         this.playerList = new HashMap<>();
+        this.bulletList = new LinkedList<>();
         this.camera = camera;
 
     }
@@ -42,7 +47,6 @@ public class Client {
             new Thread(new DataReceiver()).start();
 
             printWriter = new PrintWriter(socket.getOutputStream(), true);
-
             while (true) {
 
                 if (controls.isPressedKey()) {
@@ -54,8 +58,8 @@ public class Client {
 
                     if (controls.shooted()) {
                         System.out.println("mandou mensagem");
-                        double initialX = player.getLogicalCol();
-                        double initialY = player.getLogicalRow();
+                        double initialX = player.getLogicalCol() * Grid.CELLSIZE + Grid.PADDING;
+                        double initialY = player.getLogicalRow() * Grid.CELLSIZE + Grid.PADDING;
                         double finalX = controls.getFinalX();
                         double finalY = controls.getFinalY();
                         String bulletMessage = PlayerCommandList.bullet(initialX, initialY, finalX, finalY);
@@ -74,7 +78,7 @@ public class Client {
                 }
 
                 player.bulletsMove();
-
+                drawBullet();
             }
 
         } catch (IOException e) {
@@ -97,13 +101,16 @@ public class Client {
 
                 bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
+
                 while (true) {
 
                     String message = bufferedReader.readLine();
+                    addBullet(message);
                     moveEnemy(message);
                     System.out.println(message);
 
                 }
+
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -122,7 +129,48 @@ public class Client {
         }
     }
 
-    public void moveEnemy(String message) {
+    public void drawBullet() {
+
+        synchronized (bulletList) {
+            try {
+                Thread.sleep(30);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            for (int i = 0; i < bulletList.size(); i++) {
+
+                if (camera.bulletIsInView(bulletList.get(i))) {
+                    bulletList.get(i).draw();
+
+                }
+                bulletList.get(i).move();
+            }
+        }
+    }
+
+    private void addBullet(String bulletMessage) {
+
+        synchronized (bulletList) {
+
+            String[] bulletData = bulletMessage.split(" ");
+
+            if (!bulletData[0].equals("B")) {
+                return;
+            }
+
+
+            double initialX = Double.parseDouble(bulletData[1]);
+            double initialY = Double.parseDouble(bulletData[2]);
+            double finalX = Double.parseDouble(bulletData[3]);
+            double finalY = Double.parseDouble(bulletData[4]);
+
+            Bullet bullet = new Bullet(initialX, initialY, finalX, finalY);
+            bulletList.add(bullet);
+            bullet.bulletInit();
+        }
+    }
+
+    private void moveEnemy(String message) {
 
         if (message.charAt(0) != 'M') {
             return;
@@ -147,9 +195,7 @@ public class Client {
             System.out.println("new player added");
             playerList.put(playerNum, new Player());
             enemy = playerList.get(playerNum);
-            enemy.setPlayerCol(newCol);
-            enemy.setPlayerRow(newRow);
-            enemy.initEnemyPlayer();
+            enemy.initEnemyPlayer(newCol, newRow);
             return;
         }
 
