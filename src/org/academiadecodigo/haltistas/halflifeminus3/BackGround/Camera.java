@@ -1,6 +1,10 @@
 package org.academiadecodigo.haltistas.halflifeminus3.BackGround;
 
+import org.academiadecodigo.haltistas.halflifeminus3.Client.Bullet;
 import org.academiadecodigo.haltistas.halflifeminus3.Client.Player;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class Camera {
 
@@ -18,13 +22,15 @@ public class Camera {
         this.topRow = topRow;
         this.grid = grid;
         this.player = player;
-
     }
 
     public void init() {
 
         int colP = (backCol + Camera.CAMERA_WIDTH) / 2 - 1;
         int rowP = (topRow + Camera.CAMERA_HEIGHT) / 2 - 1;
+
+        System.out.println(colP);
+        System.out.println(rowP);
 
         grid.translateGrid(-backCol, -topRow);
 
@@ -51,11 +57,14 @@ public class Camera {
 
         for (int row = topRow; row < topRow + CAMERA_HEIGHT; row++) {
             grid.getGrid()[backCol][row].delete();
-            grid.getGrid()[backCol + CAMERA_WIDTH][row].draw();
-
         }
 
         grid.translateGrid(-1, 0);
+
+        for (int row = topRow; row < topRow + CAMERA_HEIGHT; row++) {
+            grid.getGrid()[backCol + CAMERA_WIDTH][row].draw();
+        }
+
         player.debug();
         backCol++;
 
@@ -71,11 +80,14 @@ public class Camera {
 
         for (int row = topRow; row < topRow + CAMERA_HEIGHT; row++) {
             grid.getGrid()[backCol + CAMERA_WIDTH - 1][row].delete();
-            grid.getGrid()[backCol - 1][row].draw();
-
         }
 
         grid.translateGrid(1, 0);
+
+        for (int row = topRow; row < topRow + CAMERA_HEIGHT; row++) {
+            grid.getGrid()[backCol - 1][row].draw();
+        }
+
         player.debug();
         backCol--;
 
@@ -90,13 +102,18 @@ public class Camera {
 
         for (int col = backCol; col < backCol + CAMERA_WIDTH; col++) {
             grid.getGrid()[col][topRow + CAMERA_HEIGHT - 1].delete();
-            grid.getGrid()[col][topRow - 1].draw();
-
         }
 
         grid.translateGrid(0, 1);
+
+        for (int col = backCol; col < backCol + CAMERA_WIDTH; col++) {
+            grid.getGrid()[col][topRow - 1].draw();
+        }
+
+
         player.debug();
         topRow--;
+
     }
 
 
@@ -108,25 +125,57 @@ public class Camera {
 
         for (int col = backCol; col < backCol + CAMERA_WIDTH; col++) {
             grid.getGrid()[col][topRow].delete();
-            grid.getGrid()[col][topRow + CAMERA_HEIGHT].draw();
+
 
         }
 
         grid.translateGrid(0, -1);
+
+        for (int col = backCol; col < backCol + CAMERA_WIDTH; col++) {
+            grid.getGrid()[col][topRow + CAMERA_HEIGHT].draw();
+        }
+
+
         player.debug();
         topRow++;
     }
 
-    public Player getPlayer () {
+    public Player getPlayer() {
         return player;
     }
 
     public boolean isInView(Player enemy) {
 
-        return (backCol + 1 < enemy.getLogicalCol() && backCol + CAMERA_WIDTH - 1 > enemy.getLogicalCol()
-                && topRow + 1 < enemy.getLogicalRow() && topRow + CAMERA_HEIGHT - 1 > enemy.getLogicalRow());
+        return (backCol < enemy.getLogicalCol() && backCol + CAMERA_WIDTH - 1 > enemy.getLogicalCol()
+                && topRow < enemy.getLogicalRow() && topRow + CAMERA_HEIGHT - 1 > enemy.getLogicalRow());
 
     }
 
 
+    public boolean bulletIsInView(Bullet bullet) {
+        int backColToX = (backCol + 1) * Grid.CELLSIZE + Grid.PADDING;
+        int fronColToX = (backCol + CAMERA_WIDTH - 1) * Grid.CELLSIZE + Grid.PADDING;
+        int topRowToY = (topRow + 1) * Grid.CELLSIZE + Grid.PADDING;
+        int botRowToY = (topRow + CAMERA_HEIGHT - 1) * Grid.CELLSIZE;
+
+
+        return (backColToX < bullet.getX() && fronColToX > bullet.getX()
+                && topRowToY < bullet.getY() && botRowToY > bullet.getY());
+    }
+
+    public void addEnemie(Player enemie) {
+        grid.addEnemie(enemie);
+    }
+
+    public void showEnemiesInView() {
+
+        for (Player enemy : grid.getEnemies()) {
+            if (isInView(enemy)) {
+                enemy.debug();
+            }
+            else {
+                enemy.delete();
+            }
+        }
+    }
 }

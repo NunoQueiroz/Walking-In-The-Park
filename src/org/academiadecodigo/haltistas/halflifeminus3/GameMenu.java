@@ -12,6 +12,7 @@ public class GameMenu implements ButtonListener {
     private Menu menu = new Menu(200, 200);
     private Client client;
     private Game game;
+    private volatile boolean start = false;
 
     public GameMenu() {
 
@@ -26,6 +27,11 @@ public class GameMenu implements ButtonListener {
         this.menu.addButtonListener(this);
         this.menu.show();
 
+        while (!start) {
+
+        }
+
+        game.start();
     }
 
     @Override
@@ -44,7 +50,7 @@ public class GameMenu implements ButtonListener {
 
         game = new Game(textField.getText());
         this.menu.hide();
-        game.start();
+        start = true;
 
 
         System.out.println(textField.getText());

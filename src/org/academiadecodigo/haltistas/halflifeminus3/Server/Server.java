@@ -34,6 +34,7 @@ public class Server {
 
         try {
 
+            int count = 0;
 
             serverSocket = new ServerSocket(portNumber);
 
@@ -44,8 +45,11 @@ public class Server {
                 clientHandler = new ClientHandler(this, socket);
 
                 clientHandlers.add(clientHandler);
+                clientHandler.sendMessage("YOUARENUMBER " + count);
+                broadcast("M " + count + " 11 6");
 
-                cachedPool.submit(clientHandler);
+                count++;
+                cachedPool.execute(clientHandler);
 
             }
 
@@ -56,13 +60,10 @@ public class Server {
 
     }
 
-    public void broadcast(String message, ClientHandler clientHandler) {
+    public void broadcast(String message) {
 
         for (ClientHandler ch : clientHandlers) {
 
-            if (ch == clientHandler) {
-                continue;
-            }
             ch.sendMessage(message);
         }
 
