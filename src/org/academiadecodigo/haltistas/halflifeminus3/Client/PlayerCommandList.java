@@ -2,30 +2,15 @@ package org.academiadecodigo.haltistas.halflifeminus3.Client;
 
 public class PlayerCommandList {
 
+    public static String player(int playerNumber, int col, int row) {
 
-
-    public static String playerPosition(int playerNum, int col, int row){
-
-        return "M " + playerNum + " " + col + " " + row;
-
+        return "M " + playerNumber + " " + col + " " + row;
 
     }
 
+    public static String bullet(int id, double initialX, double initialY, double finalX, double finalY) {
 
-    public static String initialBulletPosition(int x, int y){
-
-
-        return "B " + x + " " + y;
-
+        return "B " + id + " " + initialX + " " + initialY + " " + finalX + " " + finalY;
     }
-
-    public static String finalBulletPostion(int x, int y){
-
-        return "B " + x + " " + y;
-
-    }
-
-
-
 
 }

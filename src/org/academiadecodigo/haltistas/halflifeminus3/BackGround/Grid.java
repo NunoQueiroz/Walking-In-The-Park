@@ -1,157 +1,170 @@
 package org.academiadecodigo.haltistas.halflifeminus3.BackGround;
 
 import org.academiadecodigo.haltistas.halflifeminus3.Client.Player;
-import org.academiadecodigo.simplegraphics.pictures.Picture;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class Grid {
 
-    private int totalCol;
-    private int totalRow;
-    private int currentCol;
-    private int currentRow;
-    private Picture[][] grid;
     public static final int CELLSIZE = 30;
     public static final int PADDING = 10;
-    public static final int CAMERA_HEIGHT = 15;
-    public static final int CAMERA_WIDHT = 20;
-    private Player player;
-    private CollidableBackGround backGround;
 
+    public static final int MAX_COL = 50;
+    public static final int MAX_ROW = 50;
 
-    public  Grid (int totalCol, int totalRow, int currentCol, int currentRow, Player player) {
-        this.totalCol = totalCol;
-        this.totalRow = totalRow;
-        this.grid = new Picture[totalCol][totalRow];
-        this.currentCol = currentCol;
-        this.currentRow = currentRow;
-        this.player = player;
-        this.backGround = new CollidableBackGround();
+    private GameBackground[][] grid;
+    private List<Player> enemies;
+
+    public Grid() {
+        grid = new GameBackground[MAX_COL][MAX_ROW];
+        enemies = new LinkedList<>();
     }
 
-    public void init () {
+    public void init() {
+        for (int col = 0; col < MAX_COL; col++) {
+            for (int row = 0; row < MAX_ROW; row++) {
+                grid[col][row] = new UncollidableBackground(col, row, "assets/grass_tile.jpg");
+            }
 
-        for (int col = 0; col < totalCol; col++) {
-            for (int row = 0; row < totalRow; row++) {
-                grid[col][row] = new Picture(col * CELLSIZE + PADDING, row * CELLSIZE + PADDING, "assets/grass_tile.jpg");
+        }
+        createTrees();
+        createFrame();
+        createLake(grid, 35, 15, 3);
+        createLake(grid, 20, 20, 3);
+        createHouse(30, 15, grid);
+        createHouse(25, 30, grid);
+        createHouse(15, 10, grid);
+        makeDogs(20, 20);
+    }
+
+    public void createFrame() {
+        int initialColFrame = Camera.CAMERA_WIDTH / 2 - 9;
+        int finalColFrame = Camera.CAMERA_WIDTH / 2 - 8;
+        int initialRowFrame = Camera.CAMERA_HEIGHT / 2 - 5;
+        int finalRowFrame = Camera.CAMERA_HEIGHT / 2 - 4;
+
+        for (int col = 0; col < MAX_COL; col++) {
+
+            for (int row = 0; row < MAX_ROW; row++) {
+                if ((col > initialColFrame && col < MAX_COL - finalColFrame) &&
+                        (row > initialRowFrame && row < MAX_ROW - finalRowFrame)) {
+                    continue;
+                }
+
+                grid[col][row] = new UncollidableBackground(col, row, "assets/wall_tile.png");
             }
         }
 
-        backGround.init(grid, totalCol, totalRow);
 
-
-
-        camera();
     }
 
-    public void camera() {
-        //translate(-currentCol, -currentRow);
+    public void createTrees() {
+        int initialColTrees = Camera.CAMERA_WIDTH / 2 - 2;
+        int finalColTrees = Camera.CAMERA_WIDTH / 2 - 1;
+        int initialRowTrees = Camera.CAMERA_HEIGHT / 2 - 2;
+        int finalRowFTrees = Camera.CAMERA_HEIGHT / 2 - 1;
 
-        for (int col = currentCol; col < CAMERA_WIDHT + currentCol; col++) {
-            for (int row = currentRow; row < CAMERA_HEIGHT + currentRow; row++) {
-                grid[col][row].draw();
+        for (int col = 0; col < MAX_COL; col++) {
+            for (int row = 0; row < MAX_ROW; row++) {
+
+                if ((col > initialColTrees && col < MAX_COL - finalColTrees) &&
+                        (row > initialRowTrees && row < MAX_ROW - finalRowFTrees)) {
+                    continue;
+                }
+                grid[col][row] = new UncollidableBackground(col, row, "assets/tree.png");
+
+            }
+        }
+    }
+
+
+    public void createLake(GameBackground[][] grid, int initialRow, int initialCol, int numberOfCols) {
+
+        int row = initialRow;
+        int interval = 1;
+
+        for (int i = initialCol; i < initialCol + numberOfCols; i++) {
+            for (int j = row; j < initialRow + interval; j++) {
+
+                grid[i][j] = new GameBackground(i, j, "assets/water_tile.png");
+            }
+
+            interval += 1;
+            row -= 1;
+
+        }
+
+        row = initialRow;
+        interval = 1;
+
+        for (int i = initialCol + 2 * numberOfCols; i > initialCol + numberOfCols - 1; i--) {
+            for (int j = row; j < initialRow + interval; j++) {
+
+                grid[i][j] = new GameBackground(i, j, "assets/water_tile.png");
+            }
+
+            interval += 1;
+            row -= 1;
+
+        }
+
+    }
+
+
+    public void createHouse(int col, int row, GameBackground[][] grid) {
+
+        for (int i = col; i < col + 5; i++) {
+            for (int j = row; j < row + 5; j++) {
+
+                if (j < row + 2) {
+
+                    grid[i][j] = new GameBackground(i, j, "assets/roof_tiles.png");
+
+                    continue;
+                }
+
+                grid[i][j] = new GameBackground(i, j, "assets/house_tiles.png");
+
             }
         }
 
     }
 
-    public void translate(int colMove, int rowMove) {
 
-        for (int col = 0; col < totalCol; col++) {
-            for (int row = 0; row < totalRow; row++) {
-                grid[col][row].translate(colMove * CELLSIZE, rowMove * CELLSIZE);
+    public GameBackground[][] getGrid() {
+        return grid;
+    }
+
+    public void translateGrid(int x, int y) {
+        for (int col = 0; col < MAX_COL; col++) {
+            for (int row = 0; row < MAX_ROW; row++) {
+                grid[col][row].translateTile(x * CELLSIZE, y * CELLSIZE);
+
             }
         }
+
+        for (Player enemy : enemies) {
+            enemy.move(x, y);
+        }
     }
 
-    public void moveLeft() {
-
-        if (currentCol == 0) {
-            return;
-        }
-
-
-        for (int i = currentRow; i < currentRow + CAMERA_HEIGHT; i++) {
-            grid[currentCol - 1][i].draw();
-            grid[currentCol + CAMERA_WIDHT - 1][i].delete();
-        }
-        currentCol -= 1;
-        translate(1, 0);
-        player.delete();
-        player.draw();
+    public void addEnemie(Player enemie) {
+        enemies.add(enemie);
     }
 
-    public void moveRight() {
-
-        if (currentCol == totalCol - CAMERA_WIDHT) {
-            return;
-        }
-
-        for (int i = currentRow; i < currentRow + CAMERA_HEIGHT; i++) {
-            grid[currentCol][i].delete();
-            grid[currentCol + CAMERA_WIDHT][i].draw();
-        }
-        currentCol += 1;
-        translate(-1, 0);
-        player.delete();
-        player.draw();
-
+    public List<Player> getEnemies() {
+        return enemies;
     }
 
-    public void moveUp() {
-        if (currentRow == 0) {
-            return;
-        }
-
-
-        for (int i = currentCol; i < currentCol + CAMERA_WIDHT; i++) {
-            grid[i][currentRow - 1].draw();
-            grid[i][currentRow + CAMERA_HEIGHT - 1].delete();
+    public void makeDogs(int col, int row) {
+        for (int i = col; i < col + 5; i += 2) {
+            for (int j = row; j < row + 5; j += 2) {
+                grid[i][j] = new CollidableBackground(i, j, "assets/grass_dog.png");
+            }
 
         }
-        currentRow -= 1;
-        translate(0, 1);
-        player.delete();
-        player.draw();
     }
 
-    public void moveDown() {
-        if (currentRow == totalRow - CAMERA_HEIGHT - 1) {
-            return;
-        }
-
-        for (int i = currentCol; i < currentCol + CAMERA_WIDHT; i++) {
-            grid[i][currentRow].delete();
-            grid[i][currentRow + CAMERA_HEIGHT].draw();
-        }
-        translate(0, -1);
-
-        currentRow += 1;
-        player.delete();
-        player.draw();
-
-    }
-
-    public int getCurrentCol(){
-
-        return currentCol;
-    }
-
-    public int getCurrentRow(){
-
-        return currentRow;
-
-    }
-
-
-    public boolean isInView(Player player) {
-
-        System.out.println(player);
-        System.out.println(currentCol + " " + currentRow);
-
-        int playerCol = player.getCol();
-        int playerRow = player.getRow();
-
-        return (playerCol >= currentCol && playerCol < currentCol + CAMERA_WIDHT) &&
-                (playerRow >= currentRow && playerRow < currentRow + CAMERA_HEIGHT);
-    }
 }
+
