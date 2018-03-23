@@ -1,102 +1,213 @@
 package org.academiadecodigo.haltistas.halflifeminus3.Client;
 
-import java.util.LinkedList;
-import java.util.List;
-
+import org.academiadecodigo.haltistas.halflifeminus3.BackGround.Camera;
 import org.academiadecodigo.haltistas.halflifeminus3.BackGround.Grid;
 import org.academiadecodigo.simplegraphics.pictures.Picture;
 
+import java.util.Arrays;
+import java.util.LinkedList;
+
 public class Player {
 
-    private List<Bullet> bullets;
-    private volatile boolean shoot;
     private int col;
     private int row;
+
+    private int logicalCol;
+    private int logicalRow;
+
     private Picture picture;
+    private static final int MAX_BULLETS = 5;
+    private Bullet[] bulletsList;
 
-    public Player (int col, int row) {
-        this.col = col;
-        this.row = row;
-        this.bullets = new LinkedList<>();
-    }
+    public void init(int colP, int rowP) {
+        this.col = colP;
+        this.row = rowP;
 
-    private static final int MAX_BULLETS = 12;
+        this.picture = new Picture(col * Grid.CELLSIZE + Grid.PADDING,
+                row * Grid.CELLSIZE + Grid.PADDING, "assets/player_sprite3.png");
+        this.bulletsList = new Bullet[MAX_BULLETS];
 
-    public void init () {
-        this.picture = new Picture (col * Grid.CELLSIZE + Grid.PADDING, row * Grid.CELLSIZE + Grid.PADDING, "assets/roof_tiles.png");
         picture.draw();
+        this.logicalCol = col;
+        this.logicalRow = row;
     }
 
-    public void translate (int moveCol, int moveRow) {
+    public void initEnemyPlayer(int initialCol, int initialRow) {
 
-        picture.translate(moveCol * Grid.CELLSIZE, moveRow * Grid.CELLSIZE);
-    }
+        System.out.println(initialCol + "#" + initialRow);
+        logicalCol = initialCol;
+        logicalRow = initialRow;
+        this.picture = new Picture(initialCol * Grid.CELLSIZE + Grid.PADDING, initialRow * Grid.CELLSIZE + Grid.PADDING, "assets/player_sprite3.png");
 
-    public void delete(){
-
-        this.picture.delete();
-
-    }
-
-    public void draw(){
-
-        this.picture.draw();
 
     }
 
-    public void setCol(int col) {
+    public void setPlayerCol(int col) {
+        this.logicalCol = col;
+    }
 
-        this.col += col;
+    public void setPlayerRow(int row) {
+        this.logicalRow = row;
+    }
+
+    public int getLogicalCol() {
+        return logicalCol;
+    }
+
+    public int getLogicalRow() {
+        return logicalRow;
+    }
+
+    public void setLogicalCol(int logicCol) {
+
+        this.logicalCol += logicCol;
+    }
+
+    public void setLogicalRow(int logicRow) {
+
+        this.logicalRow += logicRow;
+    }
+
+    public void playerMoveUp() {
+
+        int limit = Camera.CAMERA_HEIGHT / 2 - 1;
+
+        if (logicalRow <= limit) {
+            return;
+        }
+
+        setLogicalRow(-1);
+
     }
 
 
-    public void setRow(int row) {
+    public void playerMoveDown() {
 
-        this.row += row;
+        int limit = Grid.MAX_ROW - Camera.CAMERA_HEIGHT / 2 - 1;
 
-    }
+        if (logicalRow >= limit) {
+            return;
+        }
 
-    public int getCol() {
-
-        return col;
-    }
-
-    public int getRow() {
-
-        return row;
+        setLogicalRow(1);
 
     }
 
-    public void createBullet() {
+    public void playerMoveRight() {
 
-        if (bullets.size() < MAX_BULLETS) {
+        int limit = Grid.MAX_COL - Camera.CAMERA_WIDTH / 2 - 1;
 
-            bullets.add(new Bullet(col, row));
+        if (logicalCol >= limit) {
+            return;
+        }
+
+        setLogicalCol(1);
+
+    }
+
+    public void playerMoveLeft() {
+
+        int limit = Camera.CAMERA_WIDTH / 2 - 1;
+
+        if (logicalCol <= limit) {
+            return;
+        }
+
+        setLogicalCol(-1);
+
+    }
+
+    public void move(int colMove, int rowMove) {
+
+        System.out.println("MOVING");
+        picture.translate(colMove * Grid.CELLSIZE, rowMove * Grid.CELLSIZE);
+    }
+
+    public void shoot(double finalX, double finalY) {
+
+
+        double initialX = (col + 1) * Grid.CELLSIZE;
+        double initialY = (row + 1) * Grid.CELLSIZE;
+
+        for (int i = 0; i < MAX_BULLETS; i++) {
+
+            if (bulletsList[i] == null) {
+                bulletsList[i] = new Bullet(initialX, initialY, finalX, finalY);
+                bulletsList[i].bulletInit();
+            }
         }
 
 
     }
 
+    public void bulletsMove() throws InterruptedException {
 
-    public void shoot() {
 
-
-        if (bullets.isEmpty()) {
+        if (bulletsList[0] == null) {
             return;
         }
 
 
+        for (int i = 0; i < 1; i++) {
+            Thread.sleep(30);
+
+            bulletsList[i].draw();
+            bulletsList[i].move();
+
+            if (!bulletInView(i)) {
+                bulletsList[i].delete();
+                bulletsList[i] = null;
+            }
+
+        }
+    }
+
+    public boolean bulletInView(int index) {
+
+        int right = (col + Camera.CAMERA_WIDTH / 2) * Grid.CELLSIZE + Grid.PADDING;
+        int left = Grid.PADDING;
+        int top = Grid.PADDING;
+        int bottom = (row + Camera.CAMERA_HEIGHT / 2) * Grid.CELLSIZE + Grid.PADDING;
+        double bulletX = bulletsList[index].getX();
+        double bulletY = bulletsList[index].getY();
+
+        return left < bulletX && right > bulletX && top < bulletY && bottom > bulletY;
+    }
+
+    public void debug() {
+        picture.delete();
+        picture.draw();
+    }
+
+    public void delete() {
+        picture.delete();
+    }
+
+    public void draw() {
+        System.out.println("x: " + picture.getX() + " y:" + picture.getY());
+        picture.draw();
     }
 
 
-    @Override
-    public String toString() {
-        return "Player{" +
-                "col=" + col +
-                ", row=" + row +
-                '}';
+    public int colToX() {
+        return logicalCol * Grid.CELLSIZE + Grid.PADDING;
     }
+
+    public int rowToY() {
+        return logicalRow * Grid.CELLSIZE + Grid.PADDING;
+    }
+
+    public int playerWidth() {
+
+        return (logicalCol + 2) * Grid.CELLSIZE + Grid.PADDING;
+
+    }
+
+    public int playerHeight() {
+
+        return (logicalRow + 2) * Grid.CELLSIZE + Grid.PADDING;
+
+    }
+
+
 }
-
-
-
