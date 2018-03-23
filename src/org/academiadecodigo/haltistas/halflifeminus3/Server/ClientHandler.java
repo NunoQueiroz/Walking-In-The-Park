@@ -15,7 +15,6 @@ public class ClientHandler implements Runnable {
     private Socket clientConnection;
     private PrintWriter printWriter;
     private BufferedReader bufferedReader;
-    private EventCoordinator eventCoordinator;
 
 
     public ClientHandler(Server server, Socket socket) throws IOException {
@@ -23,8 +22,6 @@ public class ClientHandler implements Runnable {
         server.getPlayerList().add(new Player());
         this.server = server;
         this.clientConnection = socket;
-        this.eventCoordinator = new EventCoordinator(server, this);
-
         printWriter = new PrintWriter(clientConnection.getOutputStream(), true);
 
     }
@@ -39,12 +36,7 @@ public class ClientHandler implements Runnable {
             while (true) {
 
                 String message = bufferedReader.readLine();
-
-                //  System.out.println(message);
-
                 stringDecoder(message);
-                //eventCoordinator.events();
-                System.out.println(message);
                 server.broadcast(message);
 
             }

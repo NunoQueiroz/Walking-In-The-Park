@@ -1,8 +1,6 @@
 package org.academiadecodigo.haltistas.halflifeminus3.BackGround;
 
-import javafx.scene.layout.Background;
 import org.academiadecodigo.haltistas.halflifeminus3.Client.Player;
-import org.academiadecodigo.simplegraphics.pictures.Picture;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -37,6 +35,7 @@ public class Grid {
         createHouse(30, 15, grid);
         createHouse(25, 30, grid);
         createHouse(15, 10, grid);
+        makeDogs(20, 20);
     }
 
     public void createFrame() {
@@ -157,4 +156,15 @@ public class Grid {
     public List<Player> getEnemies() {
         return enemies;
     }
+
+    public void makeDogs(int col, int row) {
+        for (int i = col; i < col + 5; i += 2) {
+            for (int j = row; j < row + 5; j += 2) {
+                grid[i][j] = new CollidableBackground(i, j, "assets/grass_dog.png");
+            }
+
+        }
+    }
+
 }
+

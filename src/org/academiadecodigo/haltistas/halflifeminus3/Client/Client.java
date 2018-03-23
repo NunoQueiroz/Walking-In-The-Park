@@ -3,6 +3,7 @@ package org.academiadecodigo.haltistas.halflifeminus3.Client;
 import org.academiadecodigo.haltistas.halflifeminus3.BackGround.Camera;
 import org.academiadecodigo.haltistas.halflifeminus3.BackGround.Grid;
 import org.academiadecodigo.haltistas.halflifeminus3.Controls;
+import org.academiadecodigo.simplegraphics.pictures.Picture;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -151,7 +152,8 @@ public class Client {
                     bulletList.get(i).move();
 
                     if (collisionDetector(player, bulletList.get(i))) {
-
+                        Picture picture = new Picture(10, 10 , "assets/youwin.jpg");
+                        picture.draw();
                         System.out.println("hit");
                     }
                 } else {
@@ -165,9 +167,8 @@ public class Client {
 
     public boolean collisionDetector(Player player, Bullet bullet) {
 
-        return (player.colToX() <= bullet.getX() && player.playerWidth() >= bullet.getX())
-                && (player.rowToY() <= bullet.getY() && player.playerHeight() >= bullet.getY());
-
+        return (player.colToX() <= bullet.getX() && player.playerWidth() >= bullet.getX()
+                && (player.rowToY() <= bullet.getY() && player.playerHeight() >= bullet.getY()));
 
     }
 

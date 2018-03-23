@@ -1,6 +1,5 @@
 package org.academiadecodigo.haltistas.halflifeminus3.Client;
 
-import org.academiadecodigo.haltistas.halflifeminus3.BackGround.Grid;
 import org.academiadecodigo.simplegraphics.pictures.Picture;
 
 public class Bullet {
@@ -22,7 +21,7 @@ public class Bullet {
     }
 
     public void bulletInit() {
-        picture = new Picture(inicialX, inicialY, "assets/bullet.png");
+        picture = new Picture(inicialX, inicialY, "assets/bone_2.png");
     }
 
     public int numberOfCicles() {
@@ -47,40 +46,6 @@ public class Bullet {
     }
 
 
-    private void translateBullet(BulletDirection bulletDirection){
-
-
-        switch (bulletDirection){
-
-
-            case SHOOT_UP:
-                picture.translate(0, -Grid.CELLSIZE );
-                break;
-
-            case SHOOT_DOWN:
-                picture.translate(0, Grid.CELLSIZE);
-                break;
-
-            case SHOOT_RIGHT:
-                picture.translate(Grid.CELLSIZE,0 );
-                break;
-
-            case SHOOT_LEFT:
-                picture.translate(-Grid.CELLSIZE,0 );
-                break;
-
-            default:
-                System.out.println("Error on the tranlator");
-                break;
-
-
-
-
-
-        }
-
-
-    }
 
 
 
@@ -103,13 +68,6 @@ public class Bullet {
         return picture.getY();
     }
 
-    public double getFinalX() {
-        return finalX;
-    }
-
-    public double getFinalY() {
-        return finalY;
-    }
 
     public void delete() {
         picture.delete();
@@ -119,11 +77,4 @@ public class Bullet {
         picture.draw();
     }
 
-    public double iniTialX() {
-        return inicialX;
-    }
-
-    public double getInicialY() {
-        return inicialY;
-    }
 }
